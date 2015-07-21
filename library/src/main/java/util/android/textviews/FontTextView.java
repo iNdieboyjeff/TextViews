@@ -15,7 +15,7 @@ public class FontTextView extends TextView {
 
     private static final String LOGTAG = FontTextView.class.getSimpleName();
     private static LruCache<String, Typeface> sTypefaceCache =
-            new LruCache<String, Typeface>(12);
+            new LruCache<>(12);
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);

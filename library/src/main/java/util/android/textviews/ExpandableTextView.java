@@ -3,11 +3,14 @@ package util.android.textviews;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.Html;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
@@ -52,36 +55,11 @@ public class ExpandableTextView extends FontTextView {
         OnClickListener clickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (trim) {
-                    setMaxLines(Integer.MAX_VALUE);
-                    setText(originalText, false);
-                } else {
-                    setMaxLines(lineLength);
-                    setText(originalText, true);
-                }
-                requestLayout();
-                if (adapter != null) {
-                    adapter.notifyDataSetChanged();
-                }
                 trim = !trim;
+                setContracted(trim);
             }
         };
         this.setOnClickListener(clickListener);
-    }
-
-    @Override
-    public TextUtils.TruncateAt getEllipsize() {
-        return super.getEllipsize();
-    }
-
-    public void setText(CharSequence text, boolean replaceOriginal) {
-        super.setText(text);
-        if (replaceOriginal && (originalText == null || !originalText.equals(text))) {
-            originalText = text;
-            setMaxLines(lineLength);
-            trim = true;
-            addEllipse();
-        }
     }
 
     private void addEllipse() {
@@ -103,11 +81,38 @@ public class ExpandableTextView extends FontTextView {
         }
     }
 
+    public void setContracted(boolean state) {
+        Log.d(LOG_TAG, "Is view contracted: " + state);
+        this.trim = state;
+        if (!trim) {
+            setMaxLines(Integer.MAX_VALUE);
+            setText(originalText, false);
+        } else {
+            setMaxLines(lineLength);
+            setText(originalText, true);
+        }
+        requestLayout();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
     public CharSequence getExpansionText() {
         if (expansionText == null) {
             return EXPAND_TEXT;
         } else {
             return expansionText;
+        }
+    }
+
+    public void setText(CharSequence text, boolean replaceOriginal) {
+        super.setText(text);
+        if (replaceOriginal && (originalText == null || !originalText.equals(text))) {
+            originalText = text;
+            setMaxLines(lineLength);
+            trim = true;
+            addEllipse();
         }
     }
 
@@ -123,6 +128,30 @@ public class ExpandableTextView extends FontTextView {
         expandTextColour = Color.parseColor(color);
     }
 
+    @Override
+    public Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState ss = new SavedState(superState);
+        ss.trim = this.trim;
+        ss.lines = this.lineLength;
+        ss.expandColor = this.expandTextColour;
+        return ss;
+    }
+
+    @Override
+    public void onRestoreInstanceState(Parcelable state) {
+        if (!(state instanceof SavedState)) {
+            super.onRestoreInstanceState(state);
+            return;
+        }
+        SavedState ss = (SavedState) state;
+        super.onRestoreInstanceState(ss.getSuperState());
+        setExpandTextColour(ss.expandColor);
+        setTrim(ss.lines);
+        setContracted(ss.trim);
+        requestLayout();
+    }
+
     public void setExpandTextColour(int color) {
         expandTextColour = color;
     }
@@ -130,5 +159,41 @@ public class ExpandableTextView extends FontTextView {
     public void setTrim(int trim) {
         lineLength = trim;
         setMaxLines(trim);
+    }
+
+    static class SavedState extends BaseSavedState {
+        //required field that makes Parcelables from a Parcel
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
+        int expandColor;
+        int lines;
+        boolean trim;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            this.expandColor = in.readInt();
+            this.lines = in.readInt();
+            this.trim = in.readByte() != 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(this.expandColor);
+            out.writeInt(this.lines);
+            out.writeByte((byte) (this.trim ? 1 : 0));
+        }
     }
 }

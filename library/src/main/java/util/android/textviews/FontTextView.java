@@ -58,8 +58,8 @@ public class FontTextView extends TextView {
             if (attr == R.styleable.customfont_android_fontFamily) {
                 fontFamily = a.getString(attr);
             }
-            a.recycle();
         }
+        a.recycle();
         if (!isInEditMode()) {
             try {
                 Typeface tf = sTypefaceCache.get(fontFamily);

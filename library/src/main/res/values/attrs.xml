@@ -3,6 +3,7 @@
     <declare-styleable name="ExpandableTextView">
         <attr name="trimLength" format="integer" />
         <attr name="expandColor" format="color" />
+        <attr name="expandText" format="string" />
     </declare-styleable>
 
     <declare-styleable name="customfont">

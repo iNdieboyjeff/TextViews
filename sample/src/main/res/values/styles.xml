@@ -17,4 +17,11 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="FontableStyle" parent="@android:style/TextAppearance">
+        <item name="android:textColor">#0320d9</item>
+        <item name="android:fontFamily">Audiowide-Regular.ttf</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+
 </resources>

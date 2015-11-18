@@ -11,11 +11,23 @@ import android.util.Log;
 import android.widget.TextView;
 
 
+/**
+ * <p>An extension to {@link TextView} that supports custom fonts.</p>
+ *
+ * <p>Fonts should be located in the assets folder of your project.</p>
+ *
+ * <p>The font for a text view can be set using the android:fontFamily property, specifying the
+ * file name of the font you wish to use.</p>
+ *
+ * <p>Typefaces are cached in a {@link LruCache}.</p>
+ *
+ * @author Jeff Sutton
+ * @version 1.0
+ */
 public class FontTextView extends TextView {
 
     private static final String LOGTAG = FontTextView.class.getSimpleName();
-    private static LruCache<String, Typeface> sTypefaceCache =
-            new LruCache<>(12);
+    private static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(12);
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -37,7 +49,7 @@ public class FontTextView extends TextView {
         init(context, attrs);
     }
 
-    public void init(Context context, AttributeSet attrs) {
+    private void init(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.customfont);
         String fontFamily = null;
         final int n = a.getIndexCount();
@@ -57,7 +69,7 @@ public class FontTextView extends TextView {
                     sTypefaceCache.put(fontFamily, tf);
                 }
                 setTypeface(tf);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

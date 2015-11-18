@@ -67,6 +67,12 @@ As well as supporting custom fonts, as with FontTextView, the ExpandableTextView
 
 *expandColor* - colour of the expandText
 
+
+What fonts?
+===================================
+Android supports TTF (TrueType) fonts, and later versions support OpenType (OTF) fonts.
+Where Android decides it doesn't like a TTF font it tends to substitute Droid Sans without throwing an Exception.
+
 Licence
 ===================================
         

@@ -4,7 +4,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android.textviews'
-    version = '1.0.1'
+    version = '1.1'
 }
 
 android {

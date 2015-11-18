@@ -15,7 +15,18 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 
-
+/**
+ * <p>A {@link FontTextView} that can start off displaying a snippet of text with a "Read More"
+ * label at the end.  When clicked the View expands to show it's complete text.</p>
+ *
+ * <p>The colour and text of the "Read More" label is customisable.</p>
+ *
+ * <p>The number of lines displayed when in the contracted state is also customisable.</p>
+ *
+ * <p>This view is able to save and restore it's state following things like screen rotation.</p>
+ *
+ * @author Jeff Sutton
+ */
 public class ExpandableTextView extends FontTextView {
 
     private static final String LOG_TAG = ExpandableTextView.class.getSimpleName();
@@ -135,6 +146,8 @@ public class ExpandableTextView extends FontTextView {
         ss.trim = this.trim;
         ss.lines = this.lineLength;
         ss.expandColor = this.expandTextColour;
+        ss.expandText = this.expansionText != null ? this.expansionText.toString() : null;
+        ss.text = this.originalText != null ? this.originalText.toString() : null;
         return ss;
     }
 
@@ -147,9 +160,10 @@ public class ExpandableTextView extends FontTextView {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         setExpandTextColour(ss.expandColor);
+        setExpansionText(ss.expandText);
+        setText(ss.text, true);
         setTrim(ss.lines);
         setContracted(ss.trim);
-        requestLayout();
     }
 
     public void setExpandTextColour(int color) {
@@ -174,8 +188,10 @@ public class ExpandableTextView extends FontTextView {
                     }
                 };
         int expandColor;
+        String expandText;
         int lines;
         boolean trim;
+        String text;
 
         SavedState(Parcelable superState) {
             super(superState);
@@ -186,6 +202,8 @@ public class ExpandableTextView extends FontTextView {
             this.expandColor = in.readInt();
             this.lines = in.readInt();
             this.trim = in.readByte() != 0;
+            this.expandText = in.readString();
+            this.text = in.readString();
         }
 
         @Override
@@ -194,6 +212,8 @@ public class ExpandableTextView extends FontTextView {
             out.writeInt(this.expandColor);
             out.writeInt(this.lines);
             out.writeByte((byte) (this.trim ? 1 : 0));
+            out.writeString(this.expandText);
+            out.writeString(this.text);
         }
     }
 }

@@ -18,7 +18,7 @@ Useage
 2. Add dependencies for TextViews.
         
         dependencies {
-            compile(group: 'util.android.textviews', name: 'textviews', version: '1.1', ext: 'aar')
+            compile(group: 'util.android.textviews', name: 'textviews', version: '1.1.1', ext: 'aar')
         }
 
 3. Place font files in your project's _assets_ directory

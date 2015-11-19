@@ -6,7 +6,7 @@
         <attr name="expandText" format="string" />
     </declare-styleable>
 
-    <declare-styleable name="customfont">
+    <declare-styleable name="FontTextView">
         <attr name="android:fontFamily"/>
         <attr name="android:textStyle"/>
     </declare-styleable>

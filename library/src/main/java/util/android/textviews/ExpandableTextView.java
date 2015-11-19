@@ -1,3 +1,19 @@
+/*
+ *  Copyright (c) 2015 Jeff Sutton
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 package util.android.textviews;
 
 import android.content.Context;
@@ -8,9 +24,7 @@ import android.os.Parcelable;
 import android.text.Html;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
@@ -32,7 +46,6 @@ public class ExpandableTextView extends FontTextView {
     private static final String LOG_TAG = ExpandableTextView.class.getSimpleName();
 
     private static final int DEFAULT_TRIM = 4;
-    private static final String EXPAND_TEXT = "See More";
     private static final String ELLIPSIS = "\u2026";
     private int expandTextColour;
     private CharSequence originalText;
@@ -82,7 +95,7 @@ public class ExpandableTextView extends FontTextView {
                     //text has shortened
                     SpannableStringBuilder text = (SpannableStringBuilder)
                             Html.fromHtml(getText().subSequence(0,
-                                    l.getLineEnd(lines - 1) - (EXPAND_TEXT.length() +
+                                    l.getLineEnd(lines - 1) - (getExpansionText().length() +
                                             ELLIPSIS.length() + 2)) +
                                     ELLIPSIS + "<font color=\"" + expandTextColour + "\">" +
                                     getExpansionText() + "</font>");
@@ -93,7 +106,6 @@ public class ExpandableTextView extends FontTextView {
     }
 
     public void setContracted(boolean state) {
-        Log.d(LOG_TAG, "Is view contracted: " + state);
         this.trim = state;
         if (!trim) {
             setMaxLines(Integer.MAX_VALUE);
@@ -111,7 +123,7 @@ public class ExpandableTextView extends FontTextView {
 
     public CharSequence getExpansionText() {
         if (expansionText == null) {
-            return EXPAND_TEXT;
+            return getResources().getString(R.string.expansion_text);
         } else {
             return expansionText;
         }

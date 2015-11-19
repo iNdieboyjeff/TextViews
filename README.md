@@ -52,6 +52,13 @@ You can also make use of styles if you wish:
     </style>
 
 
+If you do not specify the full name of the font file (e.g. font.ttf) then the system will look for the file in the following order
+ 
+ 1. Name you specified (e.g. fontName)
+ 2. Name you specified + .ttf (e.g. fontName.ttf)
+ 3. Name you specified + .otf (e.g. fontName.otf)
+
+
 ExpandableTextView
 ==================
 

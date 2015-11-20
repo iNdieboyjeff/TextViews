@@ -47,6 +47,7 @@ public class ExpandableTextView extends FontTextView {
 
     private static final int DEFAULT_TRIM = 4;
     private static final String ELLIPSIS = "\u2026";
+    private OnClickListener mClick;
     private int expandTextColour;
     private CharSequence originalText;
     private CharSequence expansionText;
@@ -79,8 +80,11 @@ public class ExpandableTextView extends FontTextView {
         OnClickListener clickListener = new OnClickListener() {
             @Override
             public void onClick(View v) {
-                trim = !trim;
-                setContracted(trim);
+                setContracted(!trim);
+                if (mClick != null) {
+                    mClick.onClick(ExpandableTextView.this);
+                }
+
             }
         };
         this.setOnClickListener(clickListener);
@@ -105,22 +109,6 @@ public class ExpandableTextView extends FontTextView {
         }
     }
 
-    public void setContracted(boolean state) {
-        this.trim = state;
-        if (!trim) {
-            setMaxLines(Integer.MAX_VALUE);
-            setText(originalText, false);
-        } else {
-            setMaxLines(lineLength);
-            setText(originalText, true);
-        }
-        requestLayout();
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-
-    }
-
     public CharSequence getExpansionText() {
         if (expansionText == null) {
             return getResources().getString(R.string.expansion_text);
@@ -141,6 +129,35 @@ public class ExpandableTextView extends FontTextView {
 
     public void setExpansionText(CharSequence text) {
         this.expansionText = text;
+    }
+
+    public boolean getContracted() {
+        return trim;
+    }
+
+    public void setContracted(boolean state) {
+        if (trim == state) {
+            requestLayout();
+            return;
+        }
+        new Throwable().printStackTrace();
+        this.trim = state;
+        if (!trim) {
+            setMaxLines(Integer.MAX_VALUE);
+            setText(originalText, true);
+        } else {
+            setMaxLines(lineLength);
+            setText(originalText, true);
+        }
+        requestLayout();
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+
+    public void setOnViewClickListener(OnClickListener listener) {
+        this.mClick = listener;
     }
 
     public void setAdapter(BaseAdapter adapter) {

@@ -28,13 +28,13 @@ Usage
 2. Add dependencies for TextViews.
         
         dependencies {
-            compile(group: 'util.android.textviews', name: 'library', version: '1.1.2', ext: 'aar')
+            compile(group: 'util.android.textviews', name: 'library', version: '1.2', ext: 'aar')
         }
         
         or
         
         dependencies {
-            compile 'util.android.textviews:library:1.1.2@aar'
+            compile 'util.android.textviews:library:1.2@aar'
         }
 
 3. Place font files in your project's _assets_ directory

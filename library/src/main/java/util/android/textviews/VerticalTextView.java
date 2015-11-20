@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 
@@ -29,7 +30,9 @@ import android.widget.TextView;
  */
 public class VerticalTextView extends TextView {
 
-    final boolean topDown;
+    private static final String LOGTAG = VerticalTextView.class.getSimpleName();
+
+    private final boolean topDown;
 
     public VerticalTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -41,12 +44,21 @@ public class VerticalTextView extends TextView {
         } else
             topDown = true;
 
+        // We need to remap the padding so that values apply to the correct sides.  This is due
+        // to the fact that we are rotating a view.
+        if (topDown) {
+            this.setPadding(getPaddingTop(), getPaddingRight(), getPaddingBottom(), getPaddingLeft());
+        } else {
+            this.setPadding(getPaddingBottom(), getPaddingLeft(), getPaddingTop(), getPaddingRight());
+        }
+
     }
 
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        //noinspection SuspiciousNameCombination
         super.onMeasure(heightMeasureSpec, widthMeasureSpec);
         setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
     }

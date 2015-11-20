@@ -86,7 +86,54 @@
             android:id="@+id/textView7"
             android:textSize="18sp"
             android:text="@string/code_sample"
-            android:layout_below="@+id/textView6"/>
+            android:layout_below="@+id/textView6"
+            android:layout_marginBottom="6dp"/>
+
+        <util.android.textviews.VerticalTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:text="@string/hello_world"
+            android:layout_below="@+id/textView7"
+            android:layout_marginBottom="6dp"
+            android:gravity="bottom"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="5dp"/>
+        <util.android.textviews.VerticalTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView9"
+            android:text="@string/hello_world"
+            android:layout_below="@+id/textView7"
+            android:layout_marginBottom="6dp"
+            android:layout_toRightOf="@+id/textView8"
+            android:textColor="#b91616"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="12dp"/>
+
+        <util.android.textviews.FontVerticalTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView10"
+            android:text="@string/hello_world"
+            android:layout_below="@+id/textView7"
+            android:layout_marginBottom="6dp"
+            android:layout_toRightOf="@+id/textView9"
+            android:textColor="#a93a03"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:fontFamily="Audiowide-Regular"
+            android:paddingLeft="8dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="12dp"
+            android:gravity="bottom"/>
 
     </RelativeLayout>
 </ScrollView>

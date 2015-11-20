@@ -6,7 +6,7 @@ Custom Android TextView widgets, including Typeface support
 
 
 
-Useage
+Usage
 ===================================
 
 1. Add Bintray repository to your build script.
@@ -90,6 +90,21 @@ As well as supporting custom fonts, as with FontTextView, the ExpandableTextView
 
 *expandColor* - colour of the expandText
 
+
+
+VerticalTextView
+================
+
+This is a simple extension of TextView that displays rotated by 90 degrees.  To change to rotation you need to set the property:
+
+    android:gravity="bottom"
+    
+
+
+FontVerticalTextView
+====================
+    
+This is the same as VerticalTextView but based upon the FontTextView, allowing for custom typefaces.
 
 What fonts?
 ===================================

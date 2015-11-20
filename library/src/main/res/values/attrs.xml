@@ -10,4 +10,5 @@
         <attr name="android:fontFamily"/>
         <attr name="android:textStyle"/>
     </declare-styleable>
+
 </resources>

@@ -4,11 +4,21 @@ Custom Android TextView widgets, including Typeface support
 
 [ ![Download](https://api.bintray.com/packages/indieboyjeff/maven/textviews/images/download.svg) ](https://bintray.com/indieboyjeff/maven/textviews/_latestVersion)
 
+
+
 Useage
 ===================================
 
 1. Add Bintray repository to your build script.
 
+        repositories {
+            maven {
+                url  "http://jcenter.bintray.com" 
+            }
+        }
+        
+        or
+        
         repositories {
           maven {
             url  "http://dl.bintray.com/indieboyjeff/maven" 

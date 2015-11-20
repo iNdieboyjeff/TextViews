@@ -31,6 +31,7 @@ android {
 
 def siteUrl = 'https://github.com/iNdieboyjeff/TextViews'      // Homepage URL of the library
 def gitUrl = 'https://github.com/iNdieboyjeff/TextViews.git'   // Git repository URL
+def issueUrl = 'https://github.com/iNdieboyjeff/TextViews/issues'
 
 
 dependencies {
@@ -71,6 +72,9 @@ bintray {
         websiteUrl = siteUrl
         publicDownloadNumbers = true
         vcsUrl = gitUrl
+        issueTrackerUrl = issueUrl
+        labels = ["Android", "TextView", "Typeface", "Font", "Widget"]
+        desc = "Custom TextView components for Android with Typeface (font) support."
         licenses = ["Apache-2.0"]
         publish = true
     }

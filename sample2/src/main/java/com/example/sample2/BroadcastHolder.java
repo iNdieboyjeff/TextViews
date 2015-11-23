@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+
 import com.example.sample2.model.Broadcast;
 
 import util.android.textviews.ExpandableTextView;

@@ -15,7 +15,7 @@
   -->
 
 <resources>
-    <string name="app_name">Sample3</string>
+    <string name="app_name">Sample2</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello I am a fragment</string>
 </resources>

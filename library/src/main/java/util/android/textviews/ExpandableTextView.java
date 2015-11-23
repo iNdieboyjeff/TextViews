@@ -55,14 +55,28 @@ public class ExpandableTextView extends FontTextView {
     private int lineLength;
     private BaseAdapter adapter;
 
+
     public ExpandableTextView(Context context) {
         this(context, null);
     }
 
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(attrs);
+    }
 
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
+    public ExpandableTextView(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        init(attrs);
+    }
+
+    public ExpandableTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(attrs);
+    }
+
+    private void init(AttributeSet attrs) {
+        TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
         this.lineLength = typedArray.getInt(R.styleable.ExpandableTextView_trimLength, DEFAULT_TRIM);
         setMaxLines(lineLength);
         ViewTreeObserver vto = this.getViewTreeObserver();
@@ -72,7 +86,15 @@ public class ExpandableTextView extends FontTextView {
                 addEllipse();
             }
         };
+        ViewTreeObserver.OnPreDrawListener preDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                addEllipse();
+                return true;
+            }
+        };
         vto.addOnGlobalLayoutListener(globalListener);
+        vto.addOnPreDrawListener(preDrawListener);
         expandTextColour = typedArray.getColor(R.styleable.ExpandableTextView_expandColor, Color.BLACK);
         expansionText = typedArray.getText(R.styleable.ExpandableTextView_expandText);
         originalText = this.getText();
@@ -148,6 +170,7 @@ public class ExpandableTextView extends FontTextView {
         } else {
             setMaxLines(lineLength);
             setText(originalText, true);
+            addEllipse();
         }
         requestLayout();
         if (adapter != null) {

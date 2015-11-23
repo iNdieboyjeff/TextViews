@@ -18,17 +18,10 @@ package util.android.textviews;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.LruCache;
 import android.widget.Button;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * <p>A Button that allows you to set a custom Typeface</p>
@@ -38,7 +31,6 @@ import java.io.InputStream;
  */
 public class FontButton extends Button {
     private static final String LOGTAG = FontButton.class.getSimpleName();
-    private static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(12);
 
     public FontButton(Context context) {
         super(context);
@@ -79,52 +71,10 @@ public class FontButton extends Button {
         a.recycle();
         if (!isInEditMode()) {
             try {
-                Typeface tf = sTypefaceCache.get(fontFamily);
-                if(tf == null) {
-                    Log.d(LOGTAG, "loading in font: " + fontFamily);
-                    tf = Typeface.createFromAsset(getContext().getAssets(), getAssetPath(fontFamily));
-                    sTypefaceCache.put(fontFamily, tf);
-                }
-                setTypeface(tf);
+                setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception ignored) {
             }
         }
     }
 
-    /**
-     * <p>Look to see if an font exists in the assets folder.</p>
-     *
-     * <p>If a file cannot be found, this method will also check if a file with .tff or .otf
-     * appended to the name exists.  This allows you to specify just the font name in your code,
-     * rather than the full filename.</p>
-     *
-     * @param fontName The name of the font file you want to locate
-     * @return String representing the actual name of the font file
-     */
-    private String getAssetPath(String fontName) {
-        AssetManager assetManager = getResources().getAssets();
-        InputStream inputStream = null;
-        try {
-            inputStream = assetManager.open(fontName);
-        } catch (IOException ex) {
-            try {
-                inputStream = assetManager.open(fontName + ".ttf");
-                fontName += ".ttf";
-            } catch (IOException e) {
-                try {
-                    inputStream = assetManager.open(fontName + ".otf");
-                    fontName += ".otf";
-                } catch (IOException e2) {
-                    e2.printStackTrace();
-                }
-            }
-        } finally {
-            try {
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return fontName;
-    }
 }

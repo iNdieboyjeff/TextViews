@@ -25,6 +25,9 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 /**
+ * <p>A custom TextView that displays text vertically - i.e. rotated +/- 90-degrees from a
+ * standard TextView</p>
+ *
  * @since 1.1.3
  * @author Jeff Sutton
  */

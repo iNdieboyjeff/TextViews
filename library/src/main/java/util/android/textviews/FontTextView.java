@@ -69,6 +69,12 @@ public class FontTextView extends TextView {
         init(context, attrs);
     }
 
+    /**
+     * <p>Initialises the view using the attributes set in XML from a layout file or a style/theme.</p>
+     *
+     * @param context
+     * @param attrs
+     */
     private void init(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FontTextView);
         String fontFamily = null;

@@ -11,6 +11,11 @@
         <attr name="android:textStyle"/>
     </declare-styleable>
 
+    <declare-styleable name="AppCompatFontTextView">
+        <attr name="android:fontFamily"/>
+        <attr name="android:textStyle"/>
+    </declare-styleable>
+
     <declare-styleable name="FontButton">
         <attr name="android:fontFamily"/>
         <attr name="android:textStyle"/>

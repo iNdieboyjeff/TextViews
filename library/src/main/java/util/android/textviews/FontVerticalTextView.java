@@ -23,7 +23,9 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 
 /**
- * Created by jeff on 20/11/2015.
+ *
+ * @author Jeff Sutton
+ * @since 1.2.1
  */
 public class FontVerticalTextView extends FontTextView {
 

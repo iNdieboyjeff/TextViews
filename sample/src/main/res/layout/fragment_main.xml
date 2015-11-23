@@ -135,5 +135,13 @@
             android:paddingBottom="12dp"
             android:gravity="bottom"/>
 
+        <util.android.textviews.FontButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click Me"
+            android:layout_below="@+id/textView10"
+            android:textSize="18sp"
+            android:fontFamily="Audiowide-Regular"/>
+
     </RelativeLayout>
 </ScrollView>

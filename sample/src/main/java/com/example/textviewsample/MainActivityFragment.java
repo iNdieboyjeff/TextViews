@@ -28,7 +28,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import util.android.textviews.ShimmerTextView;
 import util.android.textviews.TypefaceSpan;
+import util.android.textviews.shimmer.Shimmer;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -48,6 +50,7 @@ public class MainActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         sourceCodeText = (TextView) view.findViewById(R.id.textView7);
 
+        new Shimmer().setDuration(1500).setStartDelay(2000).start((ShimmerTextView)view.findViewById(R.id.textView12));
     }
 
     public MainActivityFragment() {

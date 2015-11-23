@@ -21,4 +21,8 @@
         <attr name="android:textStyle"/>
     </declare-styleable>
 
+    <declare-styleable name="ShimmerView">
+        <attr name="reflectionColor" format="color"/>
+    </declare-styleable>
+
 </resources>

@@ -28,13 +28,13 @@ Usage
 2. Add dependencies for TextViews.
         
         dependencies {
-            compile(group: 'util.android.textviews', name: 'library', version: '1.2.2', ext: 'aar')
+            compile(group: 'util.android.textviews', name: 'library', version: '1.2.4', ext: 'aar')
         }
         
         or
         
         dependencies {
-            compile 'util.android.textviews:library:1.2.2@aar'
+            compile 'util.android.textviews:library:1.2.4@aar'
         }
 
 3. Place font files in your project's _assets_ directory
@@ -75,6 +75,12 @@ If you do not specify the full name of the font file (e.g. font.ttf) then the sy
  3. Name you specified + .otf (e.g. fontName.otf)
 
 
+AppCompatFontTextView
+=====================
+
+A version of FontTextView derived from AppCompatTextView.
+
+
 ExpandableTextView
 ==================
 
@@ -103,16 +109,23 @@ This is a simple extension of TextView that displays rotated by 90 degrees.  To 
     android:gravity="bottom"
     
 
-
 FontVerticalTextView
 ====================
     
 This is the same as VerticalTextView but based upon the FontTextView, allowing for custom typefaces.
 
+
+FontButton
+==========
+
+This is a Button based on FontTextView (just as Button is a subclass of TextView).
+
+
 What fonts?
 ===================================
 Android supports TTF (TrueType) fonts, and later versions support OpenType (OTF) fonts.
 Where Android decides it doesn't like a TTF font it tends to substitute Droid Sans without throwing an Exception.
+
 
 Licence
 ===================================

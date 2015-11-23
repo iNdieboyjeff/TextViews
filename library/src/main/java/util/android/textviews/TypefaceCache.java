@@ -31,7 +31,7 @@ import java.io.InputStream;
  * @author Jeff Sutton
  * @since 1.2.1
  */
-class TypefaceCache {
+public class TypefaceCache {
 
     private static final String LOGTAG = TypefaceCache.class.getSimpleName();
     private static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(12);

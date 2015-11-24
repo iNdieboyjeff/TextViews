@@ -11,46 +11,47 @@ Usage
 
 Add Bintray repository to your build script.
 
-    ```gradle
-    repositories {
-         jcenter()
-    }
-    ```   
+```gradle
+repositories {
+     jcenter()
+}
+```   
     
 or
 
-    ```gradle                
-    repositories {
-        maven {
-            url  "http://jcenter.bintray.com" 
-        }
+```gradle                
+repositories {
+    maven {
+        url  "http://jcenter.bintray.com" 
     }
-    ```     
+}
+```     
     
 or
     
-    ```gradle        
-    repositories {
-        maven {
-            url  "http://dl.bintray.com/indieboyjeff/maven" 
-        }
+```gradle        
+repositories {
+    maven {
+        url  "http://dl.bintray.com/indieboyjeff/maven" 
     }
-    ``` 
+}
+``` 
     
 Add dependencies for TextViews.
-    ```gradle
-        dependencies {
-            compile(group: 'util.android.textviews', name: 'library', version: '1.2.6', ext: 'aar')
-        }
-    ``` 
+
+```gradle
+dependencies {
+    compile(group: 'util.android.textviews', name: 'library', version: '1.2.6', ext: 'aar')
+}
+``` 
 
 or
     
-    ```gradle        
-        dependencies {
-            compile 'util.android.textviews:library:1.2.6@aar'
-        }
-    ```
+```gradle        
+    dependencies {
+        compile 'util.android.textviews:library:1.2.6@aar'
+    }
+```
     
 Place font files in your project's _assets_ directory
 

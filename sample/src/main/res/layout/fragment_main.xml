@@ -139,9 +139,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Click Me"
+            android:id="@+id/textView11"
             android:layout_below="@+id/textView10"
             android:textSize="18sp"
             android:fontFamily="Audiowide-Regular"/>
+
+        <util.android.textviews.ShimmerTextView
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/textView11"
+            android:id="@+id/textView12"
+            android:layout_height="wrap_content"
+            android:text="Shimmer Text"
+            android:fontFamily="Audiowide-Regular"
+            android:textSize="18sp"
+            />
 
     </RelativeLayout>
 </ScrollView>

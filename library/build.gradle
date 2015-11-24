@@ -8,7 +8,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android.textviews'
-    version = '1.2.5'
+    version = '1.2.6'
 }
 
 android {
@@ -34,10 +34,7 @@ def gitUrl = 'https://github.com/iNdieboyjeff/TextViews.git'   // Git repository
 def issueUrl = 'https://github.com/iNdieboyjeff/TextViews/issues'
 
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:23.1.1'
-}
+
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
@@ -48,6 +45,13 @@ task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     title = 'textViews ' + version
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    exclude '**/BuildConfig.java'
+    exclude '**/R.java'
+    options {
+        links "http://docs.oracle.com/javase/7/docs/api/"
+        linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
+    }
+    failOnError false
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -58,7 +62,9 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
-
+afterEvaluate {
+    javadoc.classpath += project.android.libraryVariants.toList().first().javaCompile.classpath
+}
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
@@ -80,3 +86,9 @@ bintray {
         publish = true
     }
 }
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.1.1'
+}
+

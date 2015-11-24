@@ -18,8 +18,12 @@ package util.android.textviews.shimmer;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.View;
+
+import java.lang.annotation.Target;
+import java.util.TimerTask;
 
 /**
  * Shimmer
@@ -40,6 +44,7 @@ public class Shimmer {
     private int repeatCount;
     private long duration;
     private long startDelay;
+    private long repeatDelay;
     private int direction;
     private Animator.AnimatorListener animatorListener;
 
@@ -49,6 +54,7 @@ public class Shimmer {
         repeatCount = DEFAULT_REPEAT_COUNT;
         duration = DEFAULT_DURATION;
         startDelay = DEFAULT_START_DELAY;
+        repeatDelay = DEFAULT_START_DELAY;
         direction = DEFAULT_DIRECTION;
     }
 
@@ -76,6 +82,22 @@ public class Shimmer {
 
     public Shimmer setStartDelay(long startDelay) {
         this.startDelay = startDelay;
+        return this;
+    }
+
+    public long getRepeatDelay() {
+        return repeatDelay;
+    }
+
+    /**
+     * <p>Repeat delay is only available on API 19 (KITKAT) and higher</p>
+     *
+     * @param repeatDelay Time in milliseconds to delay repetitions of this animation
+     * @return
+     */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
+    public Shimmer setRepeatDelay(long repeatDelay) {
+        this.repeatDelay = repeatDelay;
         return this;
     }
 
@@ -149,8 +171,17 @@ public class Shimmer {
                     }
 
                     @Override
-                    public void onAnimationRepeat(Animator animation) {
-
+                    public void onAnimationRepeat(final Animator animation) {
+                        if (repeatDelay > 0 && Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            animation.pause();
+                            shimmerView.postDelayed(new Runnable() {
+                                @TargetApi(Build.VERSION_CODES.KITKAT)
+                                @Override
+                                public void run() {
+                                    animation.resume();
+                                }
+                            }, repeatDelay);
+                        }
                     }
                 });
 

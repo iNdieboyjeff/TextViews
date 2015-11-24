@@ -50,7 +50,7 @@ public class MainActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         sourceCodeText = (TextView) view.findViewById(R.id.textView7);
 
-        new Shimmer().setDuration(1500).setStartDelay(2000).start((ShimmerTextView)view.findViewById(R.id.textView12));
+        new Shimmer().setDuration(1500).setStartDelay(4000).setRepeatDelay(5000).start((ShimmerTextView)view.findViewById(R.id.textView12));
     }
 
     public MainActivityFragment() {

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.widget.TextView;
 
 import util.android.textviews.shimmer.ShimmerViewBase;
 import util.android.textviews.shimmer.ShimmerViewHelper;
@@ -18,7 +17,7 @@ import util.android.textviews.shimmer.ShimmerViewHelper;
  * Shimmering TextView
  * Dumb class wrapping a ShimmerViewHelper
  */
-public class ShimmerTextView extends TextView implements ShimmerViewBase {
+public class ShimmerTextView extends FontTextView implements ShimmerViewBase {
 
     private ShimmerViewHelper shimmerViewHelper;
 

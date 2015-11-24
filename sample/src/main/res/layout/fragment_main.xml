@@ -150,6 +150,8 @@
             android:id="@+id/textView12"
             android:layout_height="wrap_content"
             android:text="Shimmer Text"
+            android:fontFamily="Audiowide-Regular"
+            android:textSize="18sp"
             />
 
     </RelativeLayout>

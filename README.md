@@ -12,6 +12,12 @@ Usage
 1. Add Bintray repository to your build script.
 
         repositories {
+            jcenter()
+        }
+                
+    or
+                
+        repositories {
             maven {
                 url  "http://jcenter.bintray.com" 
             }
@@ -50,6 +56,7 @@ attribute in your layout XML.
 
 For example:
 
+```xml
     <util.android.textviews.FontTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -57,16 +64,17 @@ For example:
         android:fontFamily="OpenSans-Regular.ttf"
         android:text="@string/hello_world"
         android:textSize="18sp" />
-
+```
 
 You can also make use of styles if you wish:
 
+```xml
     <style name="FontableStyle" parent="@android:style/TextAppearance">
         <item name="android:textColor">#0320d9</item>
         <item name="android:fontFamily">Audiowide-Regular.ttf</item>
         <item name="android:textSize">18sp</item>
     </style>
-
+```
 
 If you do not specify the full name of the font file (e.g. font.ttf) then the system will look for the file in the following order
  
@@ -86,9 +94,11 @@ ExpandableTextView
 
 As well as supporting custom fonts, as with FontTextView, the ExpandableTextView also supports some additional properties.
 
+```xml
     app:expandColor="#1a6b02"
     app:expandText="Reveal More"
     app:trimLength="3" 
+```
     
 * *trimLength* - how many lines of text should be shown when the view is in it's collapsed state. Default: 4
 

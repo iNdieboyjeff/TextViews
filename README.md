@@ -9,41 +9,50 @@ Custom Android TextView widgets, including Typeface support
 Usage
 ===================================
 
-1. Add Bintray repository to your build script.
-```gradle
+Add Bintray repository to your build script.
+
+    ```gradle
     repositories {
          jcenter()
     }
-```                
-    or
-```gradle                
+    ```   
+    
+or
+
+    ```gradle                
     repositories {
         maven {
             url  "http://jcenter.bintray.com" 
         }
     }
-```        
-    or
-```gradle        
+    ```     
+    
+or
+    
+    ```gradle        
     repositories {
         maven {
             url  "http://dl.bintray.com/indieboyjeff/maven" 
         }
     }
-``` 
-2. Add dependencies for TextViews.
-```gradle
-    dependencies {
-        compile(group: 'util.android.textviews', name: 'library', version: '1.2.6', ext: 'aar')
-    }
-```        
-    or
-```gradle        
-    dependencies {
-        compile 'util.android.textviews:library:1.2.6@aar'
-    }
-```
-3. Place font files in your project's _assets_ directory
+    ``` 
+    
+Add dependencies for TextViews.
+    ```gradle
+        dependencies {
+            compile(group: 'util.android.textviews', name: 'library', version: '1.2.6', ext: 'aar')
+        }
+    ``` 
+
+or
+    
+    ```gradle        
+        dependencies {
+            compile 'util.android.textviews:library:1.2.6@aar'
+        }
+    ```
+    
+Place font files in your project's _assets_ directory
 
 FontTextView
 ============

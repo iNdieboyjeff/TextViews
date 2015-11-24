@@ -30,8 +30,7 @@ repositories {
         url  "http://dl.bintray.com/indieboyjeff/maven" 
     }
 }
-```
-    
+``` 
 2. Add dependencies for TextViews.
 
 ```gradle
@@ -45,7 +44,6 @@ dependencies {
     compile 'util.android.textviews:library:1.2.6@aar'
 }
 ```
-
 3. Place font files in your project's _assets_ directory
 
 FontTextView
@@ -136,7 +134,7 @@ ShimmerTextView
 This is a FontTextView that also supports the _shimmer_ effect. The colour of the reflection can be set by using
 
 ```xml
-app:relectionColor="#CCCCCC"
+app:reflectionColor="#CCCCCC"
 ```
     
 Other properties of the shimmer animation are controlled through the Shimmer class.  These include:

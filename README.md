@@ -10,11 +10,11 @@ Usage
 ===================================
 
 1. Add Bintray repository to your build script.
-
+```gradle
         repositories {
             jcenter()
         }
-                
+```                
     or
                 
         repositories {
@@ -32,11 +32,12 @@ Usage
         }
     
 2. Add dependencies for TextViews.
-        
+
+```gradle
         dependencies {
             compile(group: 'util.android.textviews', name: 'library', version: '1.2.6', ext: 'aar')
         }
-        
+```        
     or
         
         dependencies {
@@ -95,9 +96,9 @@ ExpandableTextView
 As well as supporting custom fonts, as with FontTextView, the ExpandableTextView also supports some additional properties.
 
 ```xml
-    app:expandColor="#1a6b02"
-    app:expandText="Reveal More"
-    app:trimLength="3" 
+app:expandColor="#1a6b02"
+app:expandText="Reveal More"
+app:trimLength="3" 
 ```
     
 * *trimLength* - how many lines of text should be shown when the view is in it's collapsed state. Default: 4
@@ -108,16 +109,18 @@ As well as supporting custom fonts, as with FontTextView, the ExpandableTextView
 
 In order to get the expansion text to appear you must remember to set 
 
-    app:ellipsis="end"
-    
+```xml
+app:ellipsis="end"
+```
 
 VerticalTextView
 ================
 
 This is a simple extension of TextView that displays rotated by 90 degrees.  To change to rotation you need to set the property:
 
-    android:gravity="bottom"
-    
+```xml
+android:gravity="bottom"
+```
 
 FontVerticalTextView
 ====================
@@ -130,7 +133,9 @@ ShimmerTextView
 
 This is a FontTextView that also supports the _shimmer_ effect. The colour of the reflection can be set by using
 
-    app:relectionColor="#CCCCCC"
+```xml
+app:relectionColor="#CCCCCC"
+```
     
 Other properties of the shimmer animation are controlled through the Shimmer class.  These include:
 

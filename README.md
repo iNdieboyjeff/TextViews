@@ -3,8 +3,8 @@ TextViews
 Custom Android TextView widgets, including Typeface support
 
 [ ![Download](https://api.bintray.com/packages/indieboyjeff/maven/textviews/images/download.svg) ](https://bintray.com/indieboyjeff/maven/textviews/_latestVersion)
-
-
+[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![Android](https://img.shields.io/badge/platform-Android-green.svg)](http://developer.android.com)
 
 Usage
 ===================================

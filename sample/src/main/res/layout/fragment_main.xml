@@ -32,7 +32,8 @@
             android:fontFamily="SourceCodePro-Regular"
             android:layout_marginBottom="6dp"
             android:text="@string/code_sample"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold"/>
 
         <util.android.textviews.FontTextView
             android:id="@+id/textView3"
@@ -152,6 +153,7 @@
             android:text="Shimmer Text"
             android:fontFamily="Audiowide-Regular"
             android:textSize="18sp"
+            app:reflectionColor="#2472ef"
             />
 
     </RelativeLayout>

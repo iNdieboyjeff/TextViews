@@ -33,9 +33,7 @@ public class TypefaceSpan extends MetricAffectingSpan {
     }
 
     public TypefaceSpan(Context context, String typefaceName, int style) {
-        mTypeface = TypefaceCache.loadTypeface(context, typefaceName);
-
-
+        mTypeface = Typeface.create(TypefaceCache.loadTypeface(context, typefaceName), style);
     }
 
     @Override

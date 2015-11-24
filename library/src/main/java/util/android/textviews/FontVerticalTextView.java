@@ -23,6 +23,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 
 /**
+ * <p>A VerticalTextView extension to {@link FontTextView}</p>
  *
  * @author Jeff Sutton
  * @since 1.2.1

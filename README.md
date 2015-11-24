@@ -17,7 +17,7 @@ Usage
             }
         }
         
-        or
+    or
         
         repositories {
           maven {
@@ -28,13 +28,13 @@ Usage
 2. Add dependencies for TextViews.
         
         dependencies {
-            compile(group: 'util.android.textviews', name: 'library', version: '1.2.4', ext: 'aar')
+            compile(group: 'util.android.textviews', name: 'library', version: '1.2.5', ext: 'aar')
         }
         
-        or
+    or
         
         dependencies {
-            compile 'util.android.textviews:library:1.2.4@aar'
+            compile 'util.android.textviews:library:1.2.5@aar'
         }
 
 3. Place font files in your project's _assets_ directory
@@ -90,11 +90,11 @@ As well as supporting custom fonts, as with FontTextView, the ExpandableTextView
     app:expandText="Reveal More"
     app:trimLength="3" 
     
-*trimLength* - how many lines of text should be shown when the view is in it's collapsed state. Default: 4
+* *trimLength* - how many lines of text should be shown when the view is in it's collapsed state. Default: 4
 
-*expandText* - text to show indicating that a view can be expanded. Default: Show More
+* *expandText* - text to show indicating that a view can be expanded. Default: Show More
 
-*expandColor* - colour of the expandText
+* *expandColor* - colour of the expandText
 
 In order to get the expansion text to appear you must remember to set 
 
@@ -113,6 +113,21 @@ FontVerticalTextView
 ====================
     
 This is the same as VerticalTextView but based upon the FontTextView, allowing for custom typefaces.
+
+
+ShimmerTextView
+===============
+
+This is a FontTextView that also supports the _shimmer_ effect. The colour of the reflection can be set by using
+
+    app:relectionColor="#CCCCCC"
+    
+Other properties of the shimmer animation are controlled through the Shimmer class.  These include:
+
+* Animation duration
+* Animation start delay
+* Animation repect count
+* Delay between repeats of the animation
 
 
 FontButton

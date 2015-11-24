@@ -41,6 +41,15 @@ public class TypefaceCache {
         if(tf == null) {
             Log.d(LOGTAG, "loading font: " + fontFamily);
             tf = Typeface.createFromAsset(context.getAssets(), getAssetPath(context, fontFamily));
+            if (fontFamily.toLowerCase().endsWith("-bold")) {
+                tf = Typeface.create(tf, Typeface.BOLD);
+            } else if (fontFamily.toLowerCase().endsWith("-regular")) {
+                tf = Typeface.create(tf, Typeface.NORMAL);
+            } else if (fontFamily.toLowerCase().endsWith("-italic")) {
+                tf = Typeface.create(tf, Typeface.ITALIC);
+            } else if (fontFamily.toLowerCase().endsWith("-bolditalic")) {
+                tf = Typeface.create(tf, Typeface.BOLD_ITALIC);
+            }
             sTypefaceCache.put(fontFamily, tf);
         }
         return tf;

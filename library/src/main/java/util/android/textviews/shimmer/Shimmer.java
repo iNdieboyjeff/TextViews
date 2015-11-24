@@ -22,8 +22,6 @@ import android.annotation.TargetApi;
 import android.os.Build;
 import android.view.View;
 
-import java.lang.annotation.Target;
-import java.util.TimerTask;
 
 /**
  * Shimmer
@@ -93,7 +91,7 @@ public class Shimmer {
      * <p>Repeat delay is only available on API 19 (KITKAT) and higher</p>
      *
      * @param repeatDelay Time in milliseconds to delay repetitions of this animation
-     * @return
+     * @return Shimmer object
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public Shimmer setRepeatDelay(long repeatDelay) {

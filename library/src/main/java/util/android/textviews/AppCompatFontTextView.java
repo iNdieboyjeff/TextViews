@@ -22,6 +22,15 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
 /**
+ * <p>An extension to {@link AppCompatTextView} that supports custom fonts.</p>
+ *
+ * <p>Fonts should be located in the assets folder of your project.</p>
+ *
+ * <p>The font for a text view can be set using the android:fontFamily property, specifying the
+ * file name of the font you wish to use.</p>
+ *
+ * <p>Typefaces are cached in a {@link TypefaceCache}.</p>
+ *
  * @author Jeff Sutton
  * @since 1.2.4
  */
@@ -32,22 +41,21 @@ public class AppCompatFontTextView extends AppCompatTextView {
 
     public AppCompatFontTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(attrs);
     }
 
     public AppCompatFontTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs);
+        init(attrs);
     }
 
     /**
      * <p>Initialises the view using the attributes set in XML from a layout file or a style/theme.</p>
      *
-     * @param context
      * @param attrs
      */
-    private void init(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AppCompatFontTextView);
+    private void init(AttributeSet attrs) {
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.AppCompatFontTextView);
         String fontFamily = null;
         final int n = a.getIndexCount();
         for (int i = 0; i < n; ++i) {

@@ -9,13 +9,9 @@ import util.android.textviews.shimmer.ShimmerViewBase;
 import util.android.textviews.shimmer.ShimmerViewHelper;
 
 /**
- * Shimmer
- * User: romainpiel
- * Date: 06/03/2014
- * Time: 10:19
+ * <p>A {@link FontTextView} that implements a Shimmer effect.</p>
  *
- * Shimmering TextView
- * Dumb class wrapping a ShimmerViewHelper
+ * @since 1.2.5
  */
 public class ShimmerTextView extends FontTextView implements ShimmerViewBase {
 

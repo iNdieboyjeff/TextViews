@@ -44,12 +44,12 @@ public class FontTextView extends TextView {
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(context, attrs);
+        init(attrs);
     }
 
     public FontTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
+        init(attrs);
     }
 
     public FontTextView(Context context) {
@@ -59,17 +59,16 @@ public class FontTextView extends TextView {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public FontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs);
+        init(attrs);
     }
 
     /**
      * <p>Initialises the view using the attributes set in XML from a layout file or a style/theme.</p>
      *
-     * @param context
      * @param attrs
      */
-    private void init(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FontTextView);
+    private void init(AttributeSet attrs) {
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.FontTextView);
         String fontFamily = null;
         final int n = a.getIndexCount();
         for (int i = 0; i < n; ++i) {

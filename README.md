@@ -48,9 +48,9 @@ dependencies {
 or
     
 ```gradle        
-    dependencies {
-        compile 'util.android.textviews:library:1.2.6@aar'
-    }
+dependencies {
+   compile 'util.android.textviews:library:1.2.6@aar'
+}
 ```
     
 Place font files in your project's _assets_ directory

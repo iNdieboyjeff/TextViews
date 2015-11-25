@@ -41,7 +41,7 @@ Add dependencies for TextViews.
 
 ```gradle
 dependencies {
-    compile(group: 'util.android.textviews', name: 'library', version: '1.2.6', ext: 'aar')
+    compile(group: 'util.android.textviews', name: 'library', version: '1.2.7', ext: 'aar')
 }
 ``` 
 
@@ -49,14 +49,14 @@ or
     
 ```gradle        
 dependencies {
-   compile 'util.android.textviews:library:1.2.6@aar'
+   compile 'util.android.textviews:library:1.2.7@aar'
 }
 ```
     
 Place font files in your project's _assets_ directory
 
-FontTextView
-============
+FontTextView (and AppCompatFontTextView)
+========================================
 
 You can use a custom font on the view by specifying the name of the font as the
 
@@ -68,6 +68,18 @@ For example:
 
 ```xml
     <util.android.textviews.FontTextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="OpenSans-Regular.ttf"
+        android:text="@string/hello_world"
+        android:textSize="18sp" />
+```
+
+or
+
+```xml
+    <util.android.support.v7.textviews.AppCompatFontTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -91,12 +103,6 @@ If you do not specify the full name of the font file (e.g. font.ttf) then the sy
  1. Name you specified (e.g. fontName)
  2. Name you specified + .ttf (e.g. fontName.ttf)
  3. Name you specified + .otf (e.g. fontName.otf)
-
-
-AppCompatFontTextView
-=====================
-
-A version of FontTextView derived from AppCompatTextView.
 
 
 ExpandableTextView
@@ -131,14 +137,14 @@ This is a simple extension of TextView that displays rotated by 90 degrees.  To 
 android:gravity="bottom"
 ```
 
-FontVerticalTextView
-====================
+FontVerticalTextView and (AppCompatFontVerticalTextView)
+========================================================
     
 This is the same as VerticalTextView but based upon the FontTextView, allowing for custom typefaces.
 
 
-ShimmerTextView
-===============
+ShimmerTextView and (ApPCompatShimmerTextView)
+==============================================
 
 This is a FontTextView that also supports the _shimmer_ effect. The colour of the reflection can be set by using
 

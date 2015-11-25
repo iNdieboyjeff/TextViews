@@ -8,7 +8,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android.textviews'
-    version = '1.2.7'
+    version = '1.2.8'
 }
 
 android {
@@ -43,10 +43,9 @@ task sourcesJar(type: Jar) {
 
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
-    title = 'textViews ' + version
+    title = 'TextViews ' + version
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     exclude '**/BuildConfig.java'
-    exclude '**/R.java'
     options {
         links "http://docs.oracle.com/javase/7/docs/api/"
         linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"

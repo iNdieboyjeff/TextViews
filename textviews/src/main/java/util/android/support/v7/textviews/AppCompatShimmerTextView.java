@@ -40,7 +40,8 @@ import util.android.textviews.shimmer.ShimmerViewHelper;
  *
  * <p><b>XML attributes</b></p>
  *
- * <p>See {@link R.styleable#ShimmerView ShimmerView attributes},{@link R.styleable#FontTextView FontTextView attributes},
+ * <p>See {@link util.android.textviews.R.styleable#ShimmerView ShimmerView attributes},
+ * {@link util.android.textviews.R.styleable#AppCompatFontTextView ApPCompatFontTextView attributes},
  * {@link android.R.styleable#TextView TextView attributes}, {@link android.R.styleable#View View Attributes}
  *
  * @attr ref util.android.textviews.R.styleable#ShimmerView_reflectionColor</p>

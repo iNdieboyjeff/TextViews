@@ -41,7 +41,7 @@ Add dependencies for TextViews.
 
 ```gradle
 dependencies {
-    compile(group: 'util.android.textviews', name: 'library', version: '1.2.7', ext: 'aar')
+    compile(group: 'util.android.textviews', name: 'textviews', version: '1.2.8', ext: 'aar')
 }
 ``` 
 
@@ -49,7 +49,7 @@ or
     
 ```gradle        
 dependencies {
-   compile 'util.android.textviews:library:1.2.7@aar'
+   compile 'util.android.textviews:textviews:1.2.8@aar'
 }
 ```
     

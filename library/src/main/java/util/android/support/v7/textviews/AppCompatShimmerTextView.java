@@ -1,15 +1,32 @@
-package util.android.textviews;
+/*
+ *  Copyright (c) 2015 Jeff Sutton
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package util.android.support.v7.textviews;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 
+import util.android.textviews.R;
 import util.android.textviews.shimmer.ShimmerViewBase;
 import util.android.textviews.shimmer.ShimmerViewHelper;
 
 /**
- * <p>A {@link FontTextView} that implements a Shimmer effect.</p>
+ * <p>A {@link AppCompatFontTextView} that implements a Shimmer effect.</p>
  *
  * <p>The shimmer effect is controlled using the {@link util.android.textviews.shimmer.Shimmer Shimmer} class.</p>
  *
@@ -23,32 +40,32 @@ import util.android.textviews.shimmer.ShimmerViewHelper;
  *
  * <p><b>XML attributes</b></p>
  *
- * <p>See {@link util.android.textviews.R.styleable#ShimmerView ShimmerView attributes},{@link util.android.textviews.R.styleable#FontTextView FontTextView attributes},
+ * <p>See {@link R.styleable#ShimmerView ShimmerView attributes},{@link R.styleable#FontTextView FontTextView attributes},
  * {@link android.R.styleable#TextView TextView attributes}, {@link android.R.styleable#View View Attributes}
  *
  * @attr ref util.android.textviews.R.styleable#ShimmerView_reflectionColor</p>
  *
- * @since 1.2.5
+ * @since 1.2.7
  */
-public class ShimmerTextView extends FontTextView implements ShimmerViewBase {
+public class AppCompatShimmerTextView extends AppCompatFontTextView implements ShimmerViewBase {
 
-    private static final String LOG_TAG = ShimmerTextView.class.getSimpleName();
+    private static final String LOG_TAG = AppCompatShimmerTextView.class.getSimpleName();
 
     private ShimmerViewHelper shimmerViewHelper;
 
-    public ShimmerTextView(Context context) {
+    public AppCompatShimmerTextView(Context context) {
         super(context);
         shimmerViewHelper = new ShimmerViewHelper(this, getPaint(), null);
         shimmerViewHelper.setPrimaryColor(getCurrentTextColor());
     }
 
-    public ShimmerTextView(Context context, AttributeSet attrs) {
+    public AppCompatShimmerTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         shimmerViewHelper = new ShimmerViewHelper(this, getPaint(), attrs);
         shimmerViewHelper.setPrimaryColor(getCurrentTextColor());
     }
 
-    public ShimmerTextView(Context context, AttributeSet attrs, int defStyle) {
+    public AppCompatShimmerTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         shimmerViewHelper = new ShimmerViewHelper(this, getPaint(), attrs);
         shimmerViewHelper.setPrimaryColor(getCurrentTextColor());

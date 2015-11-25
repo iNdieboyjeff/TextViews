@@ -32,7 +32,7 @@ import android.widget.TextView;
  */
 public class VerticalTextView extends TextView {
 
-    private static final String LOGTAG = VerticalTextView.class.getSimpleName();
+    private static final String LOG_TAG = VerticalTextView.class.getSimpleName();
 
     private final boolean topDown;
 

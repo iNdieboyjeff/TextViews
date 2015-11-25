@@ -21,7 +21,9 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.LruCache;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 
@@ -30,17 +32,26 @@ import android.widget.TextView;
  *
  * <p>Fonts should be located in the assets folder of your project.</p>
  *
- * <p>The font for a text view can be set using the android:fontFamily property, specifying the
- * file name of the font you wish to use.</p>
+ * <p>The font for a text view can be set using the
+ * {@link util.android.textviews.R.styleable#FontTextView_android_fontFamily android:fontFamily}
+ * property, specifying the file name of the font you wish to use.</p>
  *
  * <p>Typefaces are cached in a {@link LruCache}.</p>
+ *
+ * <p><b>XML attributes</b></p>
+ *
+ * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes},
+ * {@link android.R.styleable#TextView TextView attributes}, {@link android.R.styleable#View View Attributes}
+ *
+ * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
  *
  * @author Jeff Sutton
  * @version 1.0
  */
+@RemoteViews.RemoteView
 public class FontTextView extends TextView {
 
-    private static final String LOGTAG = FontTextView.class.getSimpleName();
+    private static final String LOG_TAG = FontTextView.class.getSimpleName();
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -81,7 +92,8 @@ public class FontTextView extends TextView {
         if (!isInEditMode()) {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
-            } catch (Exception ignored) {
+            } catch (Exception eek) {
+                Log.e(LOG_TAG, "Unable to load and apply typeface: " + fontFamily);
             }
         }
     }

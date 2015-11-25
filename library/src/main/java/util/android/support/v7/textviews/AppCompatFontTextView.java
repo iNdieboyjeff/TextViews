@@ -14,12 +14,15 @@
  *  limitations under the License.
  */
 
-package util.android.textviews;
+package util.android.support.v7.textviews;
 
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
+
+import util.android.textviews.R;
+import util.android.textviews.TypefaceCache;
 
 /**
  * <p>An extension to {@link AppCompatTextView} that supports custom fonts.</p>
@@ -31,10 +34,20 @@ import android.util.AttributeSet;
  *
  * <p>Typefaces are cached in a {@link TypefaceCache}.</p>
  *
+ * <p><b>XML attributes</b></p>
+ *
+ * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes},
+ * {@link android.support.v7.appcompat.R.styleable.AppCompatTextView AppCompatTextView attributes}, {@link android.R.styleable#View View Attributes}
+ *
+ * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
+ *
  * @author Jeff Sutton
  * @since 1.2.4
  */
 public class AppCompatFontTextView extends AppCompatTextView {
+
+    private static final String LOG_TAG = AppCompatFontTextView.class.getSimpleName();
+
     public AppCompatFontTextView(Context context) {
         super(context);
     }

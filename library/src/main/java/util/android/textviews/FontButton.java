@@ -30,6 +30,7 @@ import android.widget.Button;
  * @since 1.2.4
  */
 public class FontButton extends Button {
+
     private static final String LOGTAG = FontButton.class.getSimpleName();
 
     public FontButton(Context context) {

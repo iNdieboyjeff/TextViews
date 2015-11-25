@@ -41,7 +41,7 @@ Add dependencies for TextViews.
 
 ```gradle
 dependencies {
-    compile(group: 'util.android.textviews', name: 'textviews', version: '1.2.8', ext: 'aar')
+    compile(group: 'util.android.textviews', name: 'library', version: '1.2.8', ext: 'aar')
 }
 ``` 
 
@@ -49,7 +49,7 @@ or
     
 ```gradle        
 dependencies {
-   compile 'util.android.textviews:textviews:1.2.8@aar'
+   compile 'util.android.textviews:library:1.2.8@aar'
 }
 ```
     
@@ -137,13 +137,13 @@ This is a simple extension of TextView that displays rotated by 90 degrees.  To 
 android:gravity="bottom"
 ```
 
-FontVerticalTextView and (AppCompatFontVerticalTextView)
+FontVerticalTextView (and AppCompatFontVerticalTextView)
 ========================================================
     
 This is the same as VerticalTextView but based upon the FontTextView, allowing for custom typefaces.
 
 
-ShimmerTextView and (ApPCompatShimmerTextView)
+ShimmerTextView (and AppCompatShimmerTextView)
 ==============================================
 
 This is a FontTextView that also supports the _shimmer_ effect. The colour of the reflection can be set by using

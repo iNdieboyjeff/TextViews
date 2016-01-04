@@ -162,7 +162,7 @@ public class ExpandableTextView extends FontTextView {
             requestLayout();
             return;
         }
-        new Throwable().printStackTrace();
+//        new Throwable().printStackTrace();
         this.trim = state;
         if (!trim) {
             setMaxLines(Integer.MAX_VALUE);

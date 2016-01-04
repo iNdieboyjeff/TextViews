@@ -9,6 +9,7 @@
     <declare-styleable name="FontTextView">
         <attr name="android:fontFamily"/>
         <attr name="android:textStyle"/>
+        <attr name="justify" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="AppCompatFontTextView">

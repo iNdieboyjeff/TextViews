@@ -19,7 +19,12 @@ package util.android.textviews;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.os.Build;
+import android.text.DynamicLayout;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.LruCache;
@@ -52,6 +57,10 @@ import android.widget.TextView;
 public class FontTextView extends TextView {
 
     private static final String LOG_TAG = FontTextView.class.getSimpleName();
+
+    private boolean justify = false;
+    private int mLineY;
+    private int mViewWidth;
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -86,16 +95,95 @@ public class FontTextView extends TextView {
             int attr = a.getIndex(i);
             if (attr == R.styleable.FontTextView_android_fontFamily) {
                 fontFamily = a.getString(attr);
+            } else if (attr == R.styleable.FontTextView_justify) {
+                justify = a.getBoolean(attr, false);
             }
         }
         a.recycle();
-        if (!isInEditMode()) {
+        if (!isInEditMode() && fontFamily != null) {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception eek) {
                 Log.e(LOG_TAG, "Unable to load and apply typeface: " + fontFamily);
             }
         }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        Log.v(LOG_TAG, "onDraw() " + this.getId() + " : " + justify);
+        if (!justify) {
+            super.onDraw(canvas);
+            return;
+        }
+        TextPaint paint = getPaint();
+        paint.setColor(getCurrentTextColor());
+        paint.drawableState = getDrawableState();
+        mViewWidth = getMeasuredWidth();
+        String text = getText().toString();
+        mLineY = 0;
+        mLineY += getTextSize();
+        Layout layout = getLayout();
+        if (layout == null) {
+            layout = new DynamicLayout(text, paint, mViewWidth, Layout.Alignment.ALIGN_NORMAL,0,
+                                          0,true);
+        }
+        if (layout != null) {
+            for (int i = 0; i < layout.getLineCount(); i++) {
+                int lineStart = layout.getLineStart(i);
+                int lineEnd = layout.getLineEnd(i);
+                String line = text.substring(lineStart, lineEnd);
+
+                float width = DynamicLayout.getDesiredWidth(text, lineStart, lineEnd, getPaint());
+                if (needScale(line) && i < layout.getLineCount() -1) {
+                    drawScaledText(canvas, lineStart, line, width);
+                } else {
+                    canvas.drawText(line, 0, mLineY, paint);
+                }
+
+                mLineY += getLineHeight();
+            }
+        } else {
+            Log.v(LOG_TAG, "onDraw() " + this.getId() + " : Layout is NULL");
+        }
+    }
+
+    @Override
+    public void requestLayout() {
+        Log.v(LOG_TAG, "requestLayout()");
+        super.requestLayout();
+    }
+
+    private boolean needScale(String line) {
+        if (line.length() == 0) {
+            return false;
+        } else {
+            return line.charAt(line.length() - 1) != '\n';
+        }
+    }
+
+    private void drawScaledText(Canvas canvas, int lineStart, String line, float lineWidth) {
+        float x = 0;
+        if (isFirstLineOfParagraph(lineStart, line)) {
+            String blanks = "  ";
+            canvas.drawText(blanks, x, mLineY, getPaint());
+            float bw = StaticLayout.getDesiredWidth(blanks, getPaint());
+            x += bw;
+
+            line = line.substring(3);
+        }
+
+        float d = (mViewWidth - lineWidth) / (line.length() - 1);
+        for (int i = 0; i < line.length(); i++) {
+            String c = String.valueOf(line.charAt(i));
+            float cw = StaticLayout.getDesiredWidth(c, getPaint());
+            canvas.drawText(c, x, mLineY, getPaint());
+            x += cw + d;
+        }
+    }
+
+    private boolean isFirstLineOfParagraph(int lineStart, String line) {
+        return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';
     }
 
 }

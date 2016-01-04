@@ -64,8 +64,10 @@
             android:text="@string/hipsum"
             android:layout_marginBottom="6dp"
             android:textSize="16sp"
+            android:fontFamily="sans-serif"
             app:expandColor="#cf12bf"
-            app:trimLength="3" />
+            app:trimLength="4"
+            app:justify="true"/>
 
         <util.android.textviews.ExpandableTextView
             android:id="@+id/textView6"

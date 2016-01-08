@@ -111,7 +111,6 @@ public class FontTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Log.v(LOG_TAG, "onDraw() " + this.getId() + " : " + justify);
         if (!justify) {
             super.onDraw(canvas);
             return;
@@ -144,13 +143,11 @@ public class FontTextView extends TextView {
                 mLineY += getLineHeight();
             }
         } else {
-            Log.v(LOG_TAG, "onDraw() " + this.getId() + " : Layout is NULL");
         }
     }
 
     @Override
     public void requestLayout() {
-        Log.v(LOG_TAG, "requestLayout()");
         super.requestLayout();
     }
 

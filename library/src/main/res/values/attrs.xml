@@ -10,6 +10,7 @@
         <attr name="android:fontFamily"/>
         <attr name="android:textStyle"/>
         <attr name="justify" format="boolean"/>
+        <attr name="autoMaxLines" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="AppCompatFontTextView">

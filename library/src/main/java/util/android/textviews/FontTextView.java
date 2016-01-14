@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.os.Build;
 import android.text.DynamicLayout;
 import android.text.Layout;
@@ -59,6 +60,7 @@ public class FontTextView extends TextView {
     private static final String LOG_TAG = FontTextView.class.getSimpleName();
 
     private boolean justify = false;
+    private boolean autoMax = false;
     private int mLineY;
     private int mViewWidth;
 
@@ -97,6 +99,8 @@ public class FontTextView extends TextView {
                 fontFamily = a.getString(attr);
             } else if (attr == R.styleable.FontTextView_justify) {
                 justify = a.getBoolean(attr, false);
+            }else if (attr == R.styleable.FontTextView_autoMaxLines) {
+                autoMax = a.getBoolean(attr, false);
             }
         }
         a.recycle();
@@ -111,6 +115,9 @@ public class FontTextView extends TextView {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (autoMax) {
+            setVisibleMaxLines();
+        }
         if (!justify) {
             super.onDraw(canvas);
             return;
@@ -149,6 +156,7 @@ public class FontTextView extends TextView {
     @Override
     public void requestLayout() {
         super.requestLayout();
+
     }
 
     private boolean needScale(String line) {
@@ -181,6 +189,24 @@ public class FontTextView extends TextView {
 
     private boolean isFirstLineOfParagraph(int lineStart, String line) {
         return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';
+    }
+
+    private float calculateTextHeight(Paint.FontMetrics fm) {
+        return fm.bottom - fm.top;
+    }
+
+    public void setVisibleMaxLines() {
+        if (this.getText() != "")
+        {
+            //calculate font height
+            TextPaint tPaint = getPaint();
+            float height = calculateTextHeight(tPaint.getFontMetrics());
+            //calculate the no of lines that will fit in the text box based on this height
+            int heightOfTextView = getHeight();
+            int noLinesInTextView = (int)(heightOfTextView / height);
+            //set max lines to this
+            this.setMaxLines(noLinesInTextView);
+        }
     }
 
 }

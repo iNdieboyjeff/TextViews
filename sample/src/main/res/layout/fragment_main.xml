@@ -55,7 +55,7 @@
             android:layout_marginBottom="6dp"
             android:text="@string/hello_world" />
 
-        <util.android.textviews.ExpandableTextView
+        <util.android.textviews.FontTextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,22 +66,25 @@
             android:textSize="16sp"
             android:fontFamily="sans-serif"
             app:expandColor="#cf12bf"
+            app:autoMaxLines="false"
             app:trimLength="4"
-            app:justify="true"/>
+            app:justify="true"
+            android:maxLines="5"
+            />
 
-        <util.android.textviews.ExpandableTextView
-            android:id="@+id/textView6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView5"
-            android:ellipsize="end"
-            android:fontFamily="Audiowide-Regular"
-            android:text="@string/hipsum"
-            android:layout_marginBottom="6dp"
-            android:textSize="16sp"
-            app:expandColor="#1a6b02"
-            app:expandText="Reveal More"
-            app:trimLength="3" />
+        <!--<util.android.textviews.ExpandableTextView-->
+            <!--android:id="@+id/textView6"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@+id/textView5"-->
+            <!--android:ellipsize="end"-->
+            <!--android:fontFamily="Audiowide-Regular"-->
+            <!--android:text="@string/hipsum"-->
+            <!--android:layout_marginBottom="6dp"-->
+            <!--android:textSize="16sp"-->
+            <!--app:expandColor="#1a6b02"-->
+            <!--app:expandText="Reveal More"-->
+            <!--app:trimLength="3" />-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -89,7 +92,7 @@
             android:id="@+id/textView7"
             android:textSize="18sp"
             android:text="@string/code_sample"
-            android:layout_below="@+id/textView6"
+            android:layout_below="@+id/textView5"
             android:layout_marginBottom="6dp"/>
 
         <util.android.textviews.VerticalTextView

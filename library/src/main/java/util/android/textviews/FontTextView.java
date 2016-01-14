@@ -22,37 +22,40 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Build;
+import android.support.v4.widget.TextViewCompat;
 import android.text.DynamicLayout;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.LruCache;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
+import java.lang.reflect.Field;
+
 
 /**
  * <p>An extension to {@link TextView} that supports custom fonts.</p>
- *
+ * <p>
  * <p>Fonts should be located in the assets folder of your project.</p>
- *
- * <p>The font for a text view can be set using the
- * {@link util.android.textviews.R.styleable#FontTextView_android_fontFamily android:fontFamily}
- * property, specifying the file name of the font you wish to use.</p>
- *
+ * <p>
+ * <p>The font for a text view can be set using the {@link util.android.textviews.R.styleable#FontTextView_android_fontFamily
+ * android:fontFamily} property, specifying the file name of the font you wish to use.</p>
+ * <p>
  * <p>Typefaces are cached in a {@link LruCache}.</p>
- *
+ * <p>
  * <p><b>XML attributes</b></p>
- *
- * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes},
- * {@link android.R.styleable#TextView TextView attributes}, {@link android.R.styleable#View View Attributes}
- *
- * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
+ * <p>
+ * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes}, {@link
+ * android.R.styleable#TextView TextView attributes}, {@link android.R.styleable#View View
+ * Attributes}
  *
  * @author Jeff Sutton
  * @version 1.0
+ * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
  */
 @RemoteViews.RemoteView
 public class FontTextView extends TextView {
@@ -67,6 +70,36 @@ public class FontTextView extends TextView {
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs);
+    }
+
+    /**
+     * <p>Initialises the view using the attributes set in XML from a layout file or a
+     * style/theme.</p>
+     *
+     * @param attrs
+     */
+    private void init(AttributeSet attrs) {
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.FontTextView);
+        String fontFamily = null;
+        final int n = a.getIndexCount();
+        for (int i = 0; i < n; ++i) {
+            int attr = a.getIndex(i);
+            if (attr == R.styleable.FontTextView_android_fontFamily) {
+                fontFamily = a.getString(attr);
+            } else if (attr == R.styleable.FontTextView_justify) {
+                justify = a.getBoolean(attr, false);
+            } else if (attr == R.styleable.FontTextView_autoMaxLines) {
+                autoMax = a.getBoolean(attr, false);
+            }
+        }
+        a.recycle();
+        if (!isInEditMode() && fontFamily != null) {
+            try {
+                setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
+            } catch (Exception eek) {
+                Log.e(LOG_TAG, "Unable to load and apply typeface: " + fontFamily);
+            }
+        }
     }
 
     public FontTextView(Context context, AttributeSet attrs) {
@@ -84,35 +117,6 @@ public class FontTextView extends TextView {
         init(attrs);
     }
 
-    /**
-     * <p>Initialises the view using the attributes set in XML from a layout file or a style/theme.</p>
-     *
-     * @param attrs
-     */
-    private void init(AttributeSet attrs) {
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.FontTextView);
-        String fontFamily = null;
-        final int n = a.getIndexCount();
-        for (int i = 0; i < n; ++i) {
-            int attr = a.getIndex(i);
-            if (attr == R.styleable.FontTextView_android_fontFamily) {
-                fontFamily = a.getString(attr);
-            } else if (attr == R.styleable.FontTextView_justify) {
-                justify = a.getBoolean(attr, false);
-            }else if (attr == R.styleable.FontTextView_autoMaxLines) {
-                autoMax = a.getBoolean(attr, false);
-            }
-        }
-        a.recycle();
-        if (!isInEditMode() && fontFamily != null) {
-            try {
-                setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
-            } catch (Exception eek) {
-                Log.e(LOG_TAG, "Unable to load and apply typeface: " + fontFamily);
-            }
-        }
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         if (autoMax) {
@@ -122,41 +126,83 @@ public class FontTextView extends TextView {
             super.onDraw(canvas);
             return;
         }
+
+        final int compoundPaddingLeft = getCompoundPaddingLeft();
+        final int compoundPaddingTop = getCompoundPaddingTop();
+        final int compoundPaddingRight = getCompoundPaddingRight();
+        final int compoundPaddingBottom = getCompoundPaddingBottom();
+
+        canvas.translate(compoundPaddingLeft,
+            compoundPaddingTop);
         TextPaint paint = getPaint();
+
         paint.setColor(getCurrentTextColor());
         paint.drawableState = getDrawableState();
-        mViewWidth = getMeasuredWidth();
+        mViewWidth = getMeasuredWidth() - (compoundPaddingLeft + compoundPaddingRight);
+
         String text = getText().toString();
         mLineY = 0;
         mLineY += getTextSize();
         Layout layout = getLayout();
         if (layout == null) {
-            layout = new DynamicLayout(text, paint, mViewWidth, Layout.Alignment.ALIGN_NORMAL,0,
-                                          0,true);
+            layout = new DynamicLayout(text, paint, mViewWidth, Layout.Alignment.ALIGN_NORMAL, 0,
+                                          0, true);
         }
         if (layout != null) {
-            for (int i = 0; i < layout.getLineCount(); i++) {
+            int mLines = getMaxLines();
+            for (int i = 0; i < Math.min(mLines, layout.getLineCount()); i++) {
                 int lineStart = layout.getLineStart(i);
                 int lineEnd = layout.getLineEnd(i);
                 String line = text.substring(lineStart, lineEnd);
 
                 float width = DynamicLayout.getDesiredWidth(text, lineStart, lineEnd, getPaint());
-                if (needScale(line) && i < layout.getLineCount() -1) {
-                    drawScaledText(canvas, lineStart, line, width);
+                if (i == mLines-1 && this.getEllipsize() == TextUtils.TruncateAt.END) {
+                    line = text.substring(lineStart, lineEnd-1) + "\u2026";
+                    width = DynamicLayout.getDesiredWidth(line, 0, line.length(), getPaint());
+                    drawScaledText(canvas, 0, line, width);
+//                    canvas.drawText(line, 0, mLineY, paint);
                 } else {
-                    canvas.drawText(line, 0, mLineY, paint);
-                }
 
+                    if (needScale(line) && (i < layout.getLineCount() - 1)) {
+                        drawScaledText(canvas, lineStart, line, width);
+                    } else {
+                        canvas.drawText(line, 0, mLineY, paint);
+                    }
+                }
                 mLineY += getLineHeight();
+
             }
         } else {
         }
     }
 
     @Override
-    public void requestLayout() {
-        super.requestLayout();
+    public int getMaxLines() {
+        if (Build.VERSION.SDK_INT >= 16) {
+            return super.getMaxLines();
+        } else {
+            try {
+                Field mMaximumField = this.getClass().getDeclaredField("mMaximum");
+                mMaximumField.setAccessible(true);
+                return mMaximumField.getInt(this);
+            } catch (Exception err) {
+                err.printStackTrace();
+                return -1;
+            }
+        }
+    }
 
+    public void setVisibleMaxLines() {
+        if (this.getText() != "") {
+            //calculate font height
+            TextPaint tPaint = getPaint();
+            float height = calculateTextHeight(tPaint.getFontMetrics());
+            //calculate the no of lines that will fit in the text box based on this height
+            int heightOfTextView = getHeight();
+            int noLinesInTextView = (int) (heightOfTextView / height);
+            //set max lines to this
+            this.setMaxLines(noLinesInTextView);
+        }
     }
 
     private boolean needScale(String line) {
@@ -187,26 +233,18 @@ public class FontTextView extends TextView {
         }
     }
 
-    private boolean isFirstLineOfParagraph(int lineStart, String line) {
-        return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';
-    }
-
     private float calculateTextHeight(Paint.FontMetrics fm) {
         return fm.bottom - fm.top;
     }
 
-    public void setVisibleMaxLines() {
-        if (this.getText() != "")
-        {
-            //calculate font height
-            TextPaint tPaint = getPaint();
-            float height = calculateTextHeight(tPaint.getFontMetrics());
-            //calculate the no of lines that will fit in the text box based on this height
-            int heightOfTextView = getHeight();
-            int noLinesInTextView = (int)(heightOfTextView / height);
-            //set max lines to this
-            this.setMaxLines(noLinesInTextView);
-        }
+    private boolean isFirstLineOfParagraph(int lineStart, String line) {
+        return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';
+    }
+
+    @Override
+    public void requestLayout() {
+        super.requestLayout();
+
     }
 
 }

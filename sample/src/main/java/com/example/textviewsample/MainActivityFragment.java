@@ -28,9 +28,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.device.yearclass.DeviceInfo;
+import com.facebook.device.yearclass.YearClass;
+
+import java.util.Locale;
+
 import util.android.textviews.ShimmerTextView;
 import util.android.textviews.TypefaceSpan;
 import util.android.textviews.shimmer.Shimmer;
+import util.android.util.DisplayUtils;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -49,6 +55,18 @@ public class MainActivityFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         sourceCodeText = (TextView) view.findViewById(R.id.textView7);
+
+        TextView tv1 = (TextView) view.findViewById(R.id.textView1);
+        tv1.setText(String.format(Locale.getDefault(), "Density: %s, sw%s\nDevice year: %d\nCPU " +
+                                                          "Cores: %d, " +
+                                          "MaxFreq: %d",
+            getString(R.string.density),
+            DisplayUtils.getSmallestWidth(getActivity()),
+            YearClass.get(getActivity()),
+            DeviceInfo.getNumberOfCPUCores(),
+            DeviceInfo.getCPUMaxFreqKHz()
+            )
+        );
 
         new Shimmer().setDuration(1500).setStartDelay(4000).setRepeatDelay(5000).start((ShimmerTextView)view.findViewById(R.id.textView12));
     }

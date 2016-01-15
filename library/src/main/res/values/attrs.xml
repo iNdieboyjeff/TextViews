@@ -8,9 +8,14 @@
 
     <declare-styleable name="FontTextView">
         <attr name="android:fontFamily"/>
-        <attr name="android:textStyle"/>
+        <!-- Default text typeface style. -->
+        <attr name="android:textStyle">
+        </attr>
         <attr name="justify" format="boolean"/>
         <attr name="autoMaxLines" format="boolean"/>
+        <!-- Default text typeface. -->
+        <attr name="android:typeface">
+        </attr>
     </declare-styleable>
 
     <declare-styleable name="AppCompatFontTextView">

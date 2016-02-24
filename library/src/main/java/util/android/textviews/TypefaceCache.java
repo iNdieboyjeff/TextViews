@@ -36,21 +36,23 @@ public class TypefaceCache {
     private static final String LOGTAG = TypefaceCache.class.getSimpleName();
     private static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(12);
 
-    public static Typeface loadTypeface(Context context, String fontFamily) {
+    public static Typeface loadTypeface(Context context, String fontFamily) throws IOException {
         Typeface tf = sTypefaceCache.get(fontFamily);
         if(tf == null) {
-            Log.d(LOGTAG, "loading font: " + fontFamily);
-            tf = Typeface.createFromAsset(context.getAssets(), getAssetPath(context, fontFamily));
-            if (fontFamily.toLowerCase().endsWith("-bold")) {
-                tf = Typeface.create(tf, Typeface.BOLD);
-            } else if (fontFamily.toLowerCase().endsWith("-regular")) {
-                tf = Typeface.create(tf, Typeface.NORMAL);
-            } else if (fontFamily.toLowerCase().endsWith("-italic")) {
-                tf = Typeface.create(tf, Typeface.ITALIC);
-            } else if (fontFamily.toLowerCase().endsWith("-bolditalic")) {
-                tf = Typeface.create(tf, Typeface.BOLD_ITALIC);
-            }
-            sTypefaceCache.put(fontFamily, tf);
+
+                Log.d(LOGTAG, "loading font: " + fontFamily);
+                tf = Typeface.createFromAsset(context.getAssets(), getAssetPath(context, fontFamily));
+                if (fontFamily.toLowerCase().endsWith("-bold")) {
+                    tf = Typeface.create(tf, Typeface.BOLD);
+                } else if (fontFamily.toLowerCase().endsWith("-regular")) {
+                    tf = Typeface.create(tf, Typeface.NORMAL);
+                } else if (fontFamily.toLowerCase().endsWith("-italic")) {
+                    tf = Typeface.create(tf, Typeface.ITALIC);
+                } else if (fontFamily.toLowerCase().endsWith("-bolditalic")) {
+                    tf = Typeface.create(tf, Typeface.BOLD_ITALIC);
+                }
+                sTypefaceCache.put(fontFamily, tf);
+
         }
         return tf;
     }
@@ -65,7 +67,7 @@ public class TypefaceCache {
      * @param fontName The name of the font file you want to locate
      * @return String representing the actual name of the font file
      */
-    private static String getAssetPath(Context context, String fontName) {
+    private static String getAssetPath(Context context, String fontName) throws IOException {
         AssetManager assetManager = context.getResources().getAssets();
         InputStream inputStream = null;
         try {
@@ -79,7 +81,7 @@ public class TypefaceCache {
                     inputStream = assetManager.open(fontName + ".otf");
                     fontName += ".otf";
                 } catch (IOException e2) {
-                    e2.printStackTrace();
+                    throw new IOException("Unable to load font from assets: " + fontName);
                 }
             }
         } finally {

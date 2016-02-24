@@ -23,10 +23,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.widget.TextViewCompat;
 import android.text.DynamicLayout;
 import android.text.Layout;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -83,7 +81,7 @@ public class FontTextView extends TextView {
      * <p>Initialises the view using the attributes set in XML from a layout file or a
      * style/theme.</p>
      *
-     * @param attrs
+     * @param attrs AttributeSet
      */
     private void init(AttributeSet attrs) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.FontTextView);
@@ -169,7 +167,6 @@ public class FontTextView extends TextView {
         final int compoundPaddingLeft = getCompoundPaddingLeft();
         final int compoundPaddingTop = getCompoundPaddingTop();
         final int compoundPaddingRight = getCompoundPaddingRight();
-        final int compoundPaddingBottom = getCompoundPaddingBottom();
 
         canvas.translate(compoundPaddingLeft,
             compoundPaddingTop);
@@ -187,42 +184,38 @@ public class FontTextView extends TextView {
             layout = new DynamicLayout(text, paint, mViewWidth, Layout.Alignment.ALIGN_NORMAL, 0,
                                           0, true);
         }
-        if (layout != null) {
-            int mLines = getMaxLines();
-            if (mLines == -1) {
-                mLines = Integer.MAX_VALUE;
-            }
-            for (int i = 0; i < Math.min(mLines, layout.getLineCount()); i++) {
+        int mLines = getMaxLines();
+        if (mLines == -1) {
+            mLines = Integer.MAX_VALUE;
+        }
+        for (int i = 0; i < Math.min(mLines, layout.getLineCount()); i++) {
 //                Log.d(LOG_TAG, "Processing line " + i + " of " +  Math.min(mLines, layout.getLineCount()));
-                int lineStart = layout.getLineStart(i);
-                int lineEnd = layout.getLineEnd(i);
-                String line = null;
-
-                float width = DynamicLayout.getDesiredWidth(text, lineStart, lineEnd, paint);
-                if (i == mLines-1 && i < layout.getLineCount() && this.getEllipsize() ==
-                                                                         TextUtils
-                                                                                     .TruncateAt.END) {
-                    line = text.substring(lineStart, lineEnd-2)
-                               + "\u2026";
-                    width = DynamicLayout.getDesiredWidth(line, 0, line.length(), getPaint());
-                    if (needScale(line)) {
-                        drawScaledText(canvas, lineStart, line, width);
-                    } else{
-                        canvas.drawText(line, 0, mLineY, paint);
-                    }
-                } else if (i < mLines-1) {
-                    line = text.substring(lineStart, lineEnd);
-                    if (needScale(line) && (i < layout.getLineCount() - 1)) {
-                        drawScaledText(canvas, lineStart, line, width);
-                    } else {
-                        canvas.drawText(line, 0, mLineY, paint);
-                    }
+            int lineStart = layout.getLineStart(i);
+            int lineEnd = layout.getLineEnd(i);
+            String line;
+            float width = DynamicLayout.getDesiredWidth(text, lineStart, lineEnd, paint);
+            if (i == mLines-1 && i < layout.getLineCount() && this.getEllipsize() ==
+                                                                     TextUtils
+                                                                                 .TruncateAt.END) {
+                line = text.substring(lineStart, lineEnd-2)
+                           + "\u2026";
+                width = DynamicLayout.getDesiredWidth(line, 0, line.length(), getPaint());
+                if (needScale(line)) {
+                    drawScaledText(canvas, lineStart, line, width);
+                } else{
+                    canvas.drawText(line, 0, mLineY, paint);
                 }
-//                Log.d(LOG_TAG, line);
-                mLineY += getLineHeight();
-
+            } else if (i < mLines-1) {
+                line = text.substring(lineStart, lineEnd);
+                if (needScale(line) && (i < layout.getLineCount() - 1)) {
+                    drawScaledText(canvas, lineStart, line, width);
+                } else {
+                    canvas.drawText(line, 0, mLineY, paint);
+                }
             }
-        } else {
+//                Log.d(LOG_TAG, line);
+            mLineY += getLineHeight();
+
         }
     }
 
@@ -243,24 +236,25 @@ public class FontTextView extends TextView {
     }
 
     public void setVisibleMaxLines() {
-        if (this.getText() != "") {
-            //calculate font height
-            TextPaint tPaint = getPaint();
-            float height = calculateTextHeight(tPaint.getFontMetrics());
-            //calculate the no of lines that will fit in the text box based on this height
-            int heightOfTextView = getHeight();
-            int noLinesInTextView = (int) (heightOfTextView / height);
-            //set max lines to this
-            this.setMaxLines(noLinesInTextView);
-        }
+        new Runnable() {
+            @Override
+            public void run() {
+                if (getText() != "") {
+                    //calculate font height
+                    float height = getLineHeight();
+                    //calculate the no of lines that will fit in the text box based on this height
+                    int heightOfTextView = getHeight();
+                    int noLinesInTextView = (int) (heightOfTextView / height);
+                    //set max lines to this
+                    setMaxLines(noLinesInTextView);
+                }
+            }
+        }.run();
+
     }
 
     private boolean needScale(String line) {
-        if (line.length() == 0) {
-            return false;
-        } else {
-            return line.charAt(line.length() - 1) != '\n';
-        }
+        return line.length() != 0 && line.charAt(line.length() - 1) != '\n';
     }
 
     private void drawScaledText(Canvas canvas, int lineStart, String line, float lineWidth) {
@@ -297,12 +291,6 @@ public class FontTextView extends TextView {
 
     private boolean isFirstLineOfParagraph(int lineStart, String line) {
         return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';
-    }
-
-    @Override
-    public void requestLayout() {
-        super.requestLayout();
-
     }
 
 }

@@ -16,16 +16,22 @@
 
 package com.example.textviewsample;
 
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.facebook.device.yearclass.DeviceInfo;
@@ -51,17 +57,31 @@ public class MainActivityFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         sourceCodeText = (TextView) view.findViewById(R.id.textView7);
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        display.getMetrics(metrics);
+
+        int widthInPixels = metrics.widthPixels;
+        int heightInPixels = metrics.heightPixels;
+
+        float scaleFactor = metrics.density;
+
+        float widthDp = widthInPixels / scaleFactor;
+        float heightDp = heightInPixels / scaleFactor;
 
         TextView tv1 = (TextView) view.findViewById(R.id.textView1);
-        tv1.setText(String.format(Locale.getDefault(), "Density: %s, sw%s\nDevice year: %d\nCPU " +
+        tv1.setText(String.format(Locale.getDefault(), "Density: %s, sw%s, w%s\nDevice year: " +
+                                                           "%d\nCPU " +
                                                           "Cores: %d, " +
                                           "MaxFreq: %d",
             getString(R.string.density),
-            DisplayUtils.getSmallestWidth(getActivity()),
+            DisplayUtils.getSmallestWidth(getActivity()),widthDp,
             YearClass.get(getActivity()),
             DeviceInfo.getNumberOfCPUCores(),
             DeviceInfo.getCPUMaxFreqKHz()

@@ -21,11 +21,13 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
+import android.util.Log;
 
 
 public class TypefaceSpan extends MetricAffectingSpan {
 
-    private final Typeface mTypeface;
+    private Typeface mTypeface;
+    private static String LOG_TAG = TypefaceSpan.class.getSimpleName();
 
 
     public TypefaceSpan(Context context, String typefaceName) {
@@ -33,7 +35,11 @@ public class TypefaceSpan extends MetricAffectingSpan {
     }
 
     public TypefaceSpan(Context context, String typefaceName, int style) {
-        mTypeface = Typeface.create(TypefaceCache.loadTypeface(context, typefaceName), style);
+        try {
+            mTypeface = Typeface.create(TypefaceCache.loadTypeface(context, typefaceName), style);
+        } catch (Exception err) {
+            mTypeface = setTypefaceFromAttrs(typefaceName,0,style );
+        }
     }
 
     @Override
@@ -50,6 +56,15 @@ public class TypefaceSpan extends MetricAffectingSpan {
 
         // Note: This flag is required for proper typeface rendering
         tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
+    }
+
+    private Typeface setTypefaceFromAttrs(String familyName, int typefaceIndex, int styleIndex) {
+        Typeface tf = null;
+        if (familyName != null) {
+            tf = Typeface.create(familyName, styleIndex);
+        }
+
+       return tf;
     }
 
 }

@@ -64,7 +64,7 @@
             android:text="@string/hipsum"
             android:layout_marginBottom="6dp"
             android:textSize="16sp"
-            android:fontFamily="sans-serif"
+            android:fontFamily="Audiowide-Regular"
             app:expandColor="#cf12bf"
             app:autoMaxLines="false"
             app:trimLength="4"

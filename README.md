@@ -41,7 +41,7 @@ Add dependencies for TextViews.
 
 ```gradle
 dependencies {
-    compile(group: 'util.android.textviews', name: 'library', version: '1.2.10', ext: 'aar')
+    compile(group: 'util.android.textviews', name: 'library', version: '1.3', ext: 'aar')
 }
 ``` 
 
@@ -49,7 +49,7 @@ or
     
 ```gradle        
 dependencies {
-   compile 'util.android.textviews:library:1.2.10@aar'
+   compile 'util.android.textviews:library:1.3@aar'
 }
 ```
     
@@ -128,6 +128,8 @@ In order to get the expansion text to appear you must remember to set
 app:ellipsis="end"
 ```
 
+ExpandableTextView *does not* support justified text.
+
 VerticalTextView
 ================
 
@@ -175,7 +177,7 @@ Where Android decides it doesn't like a TTF font it tends to substitute Droid Sa
 Licence
 ===================================
         
-        Copyright (c) 2015 Jeff Sutton
+        Copyright (c) 2015-2016 Jeff Sutton
         
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.

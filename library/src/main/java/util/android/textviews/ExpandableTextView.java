@@ -21,9 +21,10 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.Html;
 import android.text.Layout;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -93,6 +94,8 @@ public class ExpandableTextView extends FontTextView {
                 return true;
             }
         };
+
+
         vto.addOnGlobalLayoutListener(globalListener);
         vto.addOnPreDrawListener(preDrawListener);
         expandTextColour = typedArray.getColor(R.styleable.ExpandableTextView_expandColor, Color.BLACK);
@@ -106,10 +109,14 @@ public class ExpandableTextView extends FontTextView {
                 if (mClick != null) {
                     mClick.onClick(ExpandableTextView.this);
                 }
-
+                addEllipse();
             }
         };
         this.setOnClickListener(clickListener);
+
+        if (this.isJustify()) {
+            this.setJustify(false);
+        }
     }
 
     private void addEllipse() {
@@ -118,13 +125,73 @@ public class ExpandableTextView extends FontTextView {
             int lines = l.getLineCount();
             if (lines > 0) {
                 if (l.getEllipsisCount(lines - 1) > 0) {
-                    //text has shortened
-                    SpannableStringBuilder text = (SpannableStringBuilder)
-                            Html.fromHtml(getText().subSequence(0,
-                                    l.getLineEnd(lines - 1) - (getExpansionText().length() +
-                                            ELLIPSIS.length() + 2)) +
-                                    ELLIPSIS + "<font color=\"" + expandTextColour + "\">" +
-                                    getExpansionText() + "</font>");
+                    float expSize = getPaint().measureText(ELLIPSIS + " " + getExpansionText().toString());
+                    boolean needsShortening = (l.getLineWidth(lines - 1) >= l.getWidth() ||
+                            l.getLineWidth(lines - 1) + expSize >= l.getWidth());
+
+                    float expDif = (l.getLineWidth(lines - 1) + expSize) - l.getWidth();
+
+                    SpannableStringBuilder text;
+
+                    ForegroundColorSpan expansionSpan = new ForegroundColorSpan((expandTextColour));
+
+                    {
+                        if (needsShortening) {
+                            int start = 0;
+                            if (expDif <= 0) {
+                             start = l.getLineEnd(lines - 1) - (getExpansionText().length() +
+                                        ELLIPSIS.length());
+                            } else {
+                                if (l.getWidth() - (l.getLineWidth(lines - 1) + expSize) > 0) {
+                                    for (int i = (int) expDif; i > 0; i--) {
+                                        try {
+                                            String st = getText().subSequence(l.getLineStart(lines - 1), l.getLineEnd(lines - 1) - i).toString();
+
+                                            float tSize = getPaint().measureText(st);
+
+                                            float newDif = (tSize + expSize) - l.getWidth();
+                                            if (newDif >= 0) {
+                                                break;
+                                            }
+                                            start = l.getLineEnd(lines - 1) - i;
+                                        } catch (Exception ignored) {
+                                        }
+                                    }
+                                } else {
+                                    for (int i = l.getLineEnd(lines - 1); i > 0; i--) {
+                                        try {
+                                            String st = getText().subSequence(l.getLineStart(lines - 1), l.getLineEnd(lines - 1) - i).toString();
+
+                                            float tSize = getPaint().measureText(st);
+
+                                            float newDif = (tSize + expSize) - l.getWidth();
+                                            if (newDif >= 0) {
+                                                break;
+                                            }
+                                            start = l.getLineEnd(lines - 1) - i;
+                                        } catch (Exception ignored) {
+                                        }
+                                    }
+                                }
+                            }
+                            String s =  getText().subSequence(0,start).toString();
+                            if (s.endsWith("\n")) {
+                                s = s.substring(0, s.length()-1);
+                                start--;
+                            }
+                            text = SpannableStringBuilder.valueOf(s + ELLIPSIS + " " + getExpansionText());
+                            text.setSpan(expansionSpan, start + ELLIPSIS.length() + 1, s.length() + ELLIPSIS.length() + getExpansionText().length() + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        } else {
+                            int start = l.getLineEnd(lines - 1);
+                            String s =  getText().subSequence(0,start).toString();
+                            if (s.endsWith("\n")) {
+                                s = s.substring(0, s.length()-1);
+                                start--;
+                            }
+                            text = SpannableStringBuilder.valueOf(s + " " + getExpansionText());
+                            text.setSpan(expansionSpan, start + 1, s.length() + getExpansionText().length() + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+                        }
+                    }
                     setText(text);
                 }
             }

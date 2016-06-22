@@ -45,7 +45,7 @@ public class BroadcastHolder extends RecyclerView.ViewHolder{
 
     public void bindBroadcast(final Broadcast broadcast, int position) {
         mTitle.setText(broadcast.getProgramme().getDisplayTitles().getTitle());
-        mSynopsis.setText(broadcast.getProgramme().getShortSynopsis() + "\nhfdsfuihewkjfksdhfkhsdfhisuehf\nhfourhfgiurehgiheighrehgiuh\ngoiherogthreuhgiurehh\noifgdfgfdgaegregfgdfgfdgrrgghir", true);
+        mSynopsis.setText(broadcast.getProgramme().getShortSynopsis() + "\nhfdsfuihewkjfksdh fkhsdfhisuehfhfourh fgiurehgiheighrehgiuhgoiherog threuhgiurehh\noifgdfgfdgaegregfgdfgfdgrrgghir", true);
         mSynopsis.setContracted(!broadcast.expanded);
         mSynopsis.setOnViewClickListener(new View.OnClickListener() {
             @Override

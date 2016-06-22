@@ -25,7 +25,6 @@ import android.util.Log;
 import android.util.LruCache;
 import android.widget.CheckedTextView;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 
 /**

@@ -74,17 +74,16 @@
 
         <util.android.textviews.ExpandableTextView
             android:id="@+id/textView6"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView5"
             android:ellipsize="end"
-            android:fontFamily="Audiowide-Regular"
+            android:fontFamily="OpenSans-Regular"
             android:text="@string/hipsum"
             android:layout_marginBottom="6dp"
             android:textSize="16sp"
             app:expandColor="#1a6b02"
-            app:expandText="Reveal More"
-            app:justify="false"
+            app:expandText=" Reveal More"
             app:trimLength="3" />
 
         <TextView

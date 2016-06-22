@@ -67,6 +67,10 @@ public class FontTextView extends TextView {
     private static final int SERIF = 2;
     private static final int MONOSPACE = 3;
 
+    public void setJustify(boolean justify) {
+        this.justify = justify;
+    }
+
     private boolean justify = false;
     private boolean autoMax = false;
     private int mLineY;
@@ -110,21 +114,6 @@ public class FontTextView extends TextView {
         }
     }
 
-    public FontTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(attrs);
-    }
-
-    public FontTextView(Context context) {
-        super(context);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public FontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-    }
-
     private void setTypefaceFromAttrs(String familyName, int typefaceIndex, int styleIndex) {
         Typeface tf = null;
         if (familyName != null) {
@@ -154,6 +143,29 @@ public class FontTextView extends TextView {
         setTypeface(tf, styleIndex);
     }
 
+    public FontTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(attrs);
+    }
+
+    public FontTextView(Context context) {
+        super(context);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public FontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(attrs);
+    }
+
+    public boolean isJustify() {
+        return justify;
+    }
+
+    private float calculateTextHeight(Paint.FontMetrics fm) {
+        return fm.bottom - fm.top;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (autoMax) {
@@ -169,43 +181,39 @@ public class FontTextView extends TextView {
         final int compoundPaddingRight = getCompoundPaddingRight();
 
         canvas.translate(compoundPaddingLeft,
-            compoundPaddingTop);
+                compoundPaddingTop);
         TextPaint paint = getPaint();
-
         paint.setColor(getCurrentTextColor());
+        paint.setTypeface(getTypeface());
+        paint.setTextSize(getTextSize());
         paint.drawableState = getDrawableState();
         mViewWidth = getMeasuredWidth() - (compoundPaddingLeft + compoundPaddingRight);
 
         String text = getText().toString() + "\n";
-        mLineY = 0;
-        mLineY += getTextSize();
-        Layout layout = getLayout();
-        if (layout == null) {
-            layout = new DynamicLayout(text, paint, mViewWidth, Layout.Alignment.ALIGN_NORMAL, 0,
-                                          0, true);
-        }
+        mLineY = -4;
+        mLineY += getTextSize() + 1;
+        Layout layout = new DynamicLayout(text, paint, (int) (mViewWidth - getTextSize()), Layout.Alignment.ALIGN_NORMAL, 0, 0.1f, true);
         int mLines = getMaxLines();
         if (mLines == -1) {
             mLines = Integer.MAX_VALUE;
         }
         for (int i = 0; i < Math.min(mLines, layout.getLineCount()); i++) {
-//                Log.d(LOG_TAG, "Processing line " + i + " of " +  Math.min(mLines, layout.getLineCount()));
             int lineStart = layout.getLineStart(i);
             int lineEnd = layout.getLineEnd(i);
             String line;
             float width = DynamicLayout.getDesiredWidth(text, lineStart, lineEnd, paint);
-            if (i == mLines-1 && i < layout.getLineCount() && this.getEllipsize() ==
-                                                                     TextUtils
-                                                                                 .TruncateAt.END) {
-                line = text.substring(lineStart, lineEnd-2)
-                           + "\u2026";
+            if (i == mLines - 1 && i < layout.getLineCount() && this.getEllipsize() ==
+                    TextUtils
+                            .TruncateAt.END) {
+                line = text.substring(lineStart, lineEnd - 2)
+                        + "\u2026";
                 width = DynamicLayout.getDesiredWidth(line, 0, line.length(), getPaint());
                 if (needScale(line)) {
                     drawScaledText(canvas, lineStart, line, width);
-                } else{
+                } else {
                     canvas.drawText(line, 0, mLineY, paint);
                 }
-            } else if (i < mLines-1) {
+            } else if (i < mLines - 1) {
                 line = text.substring(lineStart, lineEnd);
                 if (needScale(line) && (i < layout.getLineCount() - 1)) {
                     drawScaledText(canvas, lineStart, line, width);
@@ -213,7 +221,6 @@ public class FontTextView extends TextView {
                     canvas.drawText(line, 0, mLineY, paint);
                 }
             }
-//                Log.d(LOG_TAG, line);
             mLineY += getLineHeight();
 
         }
@@ -258,7 +265,6 @@ public class FontTextView extends TextView {
     }
 
     private void drawScaledText(Canvas canvas, int lineStart, String line, float lineWidth) {
-//        Log.d(LOG_TAG, "drawScaledText() " + line);
         float x = 0;
         if (isFirstLineOfParagraph(lineStart, line)) {
             String blanks = "  ";
@@ -270,12 +276,12 @@ public class FontTextView extends TextView {
         }
 
         float d = (mViewWidth - lineWidth) / (line.length() - 1);
-//        Log.d(LOG_TAG, "drawScaledText("+d+") " + line);
-        if (d > 3f) { d = 3; }
+        if (d > 3f) {
+            d = 3;
+        }
         if (d < -0.0f) {
-            line = line.substring(0, (int) (line.length() - (14.7 * Math.abs(d))))  + "\u2026";
+            line = line.substring(0, (int) (line.length() - (14.7 * Math.abs(d)))) + "\u2026";
             d = 0;
-//            Log.d(LOG_TAG, "drawScaledText("+d+") " + line);
         }
         for (int i = 0; i < line.length(); i++) {
             String c = String.valueOf(line.charAt(i));
@@ -285,9 +291,6 @@ public class FontTextView extends TextView {
         }
     }
 
-    private float calculateTextHeight(Paint.FontMetrics fm) {
-        return fm.bottom - fm.top;
-    }
 
     private boolean isFirstLineOfParagraph(int lineStart, String line) {
         return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';

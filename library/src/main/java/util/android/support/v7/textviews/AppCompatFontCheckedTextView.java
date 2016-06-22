@@ -16,15 +16,12 @@
 
 package util.android.support.v7.textviews;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.support.v7.widget.AppCompatCheckedTextView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.LruCache;
-import android.widget.CheckedTextView;
 import android.widget.RemoteViews;
 
 import util.android.textviews.R;

@@ -39,6 +39,7 @@ import com.facebook.device.yearclass.YearClass;
 
 import java.util.Locale;
 
+import util.android.textviews.ExpandableTextView;
 import util.android.textviews.ShimmerTextView;
 import util.android.textviews.TypefaceSpan;
 import util.android.textviews.shimmer.Shimmer;
@@ -87,6 +88,9 @@ public class MainActivityFragment extends Fragment {
             DeviceInfo.getCPUMaxFreqKHz()
             )
         );
+
+        ExpandableTextView etv = (ExpandableTextView) view.findViewById(R.id.textView6);
+        etv.setContracted(true);
 
         new Shimmer().setDuration(1500).setStartDelay(4000).setRepeatDelay(5000).start((ShimmerTextView)view.findViewById(R.id.textView12));
     }

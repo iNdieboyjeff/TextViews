@@ -21,7 +21,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 
-import util.android.textviews.R;
 import util.android.textviews.shimmer.ShimmerViewBase;
 import util.android.textviews.shimmer.ShimmerViewHelper;
 

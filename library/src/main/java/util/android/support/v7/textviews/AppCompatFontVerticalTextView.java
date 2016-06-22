@@ -22,7 +22,6 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.Gravity;
 
-import util.android.textviews.FontTextView;
 import util.android.textviews.VerticalTextView;
 
 /**

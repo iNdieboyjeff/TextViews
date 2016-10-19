@@ -16,9 +16,14 @@
 
 package util.android.textviews;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.Layout;
@@ -26,6 +31,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
@@ -232,14 +238,96 @@ public class ExpandableTextView extends FontTextView {
 //        new Throwable().printStackTrace();
         this.trim = state;
         if (!trim) {
-            setMaxLines(Integer.MAX_VALUE);
+            Rect bounds = new Rect();
+            Paint paint = getPaint();
+            paint.getTextBounds(originalText.toString(), 0, originalText.toString().length(), bounds);
+
+            int width = (int) Math.ceil((float) bounds.width() / getWidth());
+
+            final int bob = width+1;
             setText(originalText, true);
+            ObjectAnimator animation = ObjectAnimator.ofInt(
+                    this,
+                    "maxLines",
+                    this.getLineCount(), bob);
+            animation.setDuration(12*bob);
+            animation.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    setMaxLines(bob);
+                    requestLayout();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    setMaxLines((Integer)animation.getAnimatedValue());
+                    setText(originalText, true);
+                    requestLayout();
+                }
+            });
+            animation.start();
+
         } else {
-            setMaxLines(lineLength);
-            setText(originalText, true);
-            addEllipse();
+            Rect bounds = new Rect();
+            Paint paint = getPaint();
+            paint.getTextBounds(originalText.toString(), 0, originalText.toString().length(), bounds);
+
+            int width = (int) Math.ceil((float) bounds.width() / getWidth());
+
+            final int bob = width+1;
+            ObjectAnimator animation = ObjectAnimator.ofInt(
+                    this,
+                    "maxLines",
+                    this.getLineCount(), lineLength);
+            animation.setDuration(12*bob);
+            animation.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    setMaxLines(lineLength);
+                    setText(originalText, true);
+                    addEllipse();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
+            animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    requestLayout();
+                }
+            });
+            animation.start();
         }
-        requestLayout();
+
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }

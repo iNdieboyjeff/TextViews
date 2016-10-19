@@ -1,19 +1,30 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.1'
+    }
+
+}
+
 plugins {
     id "com.jfrog.bintray" version "1.4"
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android.textviews'
-    version = '1.3'
+    version = '1.4'
 }
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
         minSdkVersion 14
@@ -88,6 +99,6 @@ bintray {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.2.1'
 }
 

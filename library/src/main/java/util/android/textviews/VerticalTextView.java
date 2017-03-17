@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,18 +21,15 @@ import android.graphics.Canvas;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.widget.TextView;
 
 /**
  * <p>A custom TextView that displays text vertically - i.e. rotated +/- 90-degrees from a
  * standard TextView</p>
  *
- * @since 1.1.3
  * @author Jeff Sutton
+ * @since 1.1.3
  */
-public class VerticalTextView extends TextView {
-
-    private static final String LOG_TAG = VerticalTextView.class.getSimpleName();
+public class VerticalTextView extends android.support.v7.widget.AppCompatTextView {
 
     private final boolean topDown;
 
@@ -56,15 +53,6 @@ public class VerticalTextView extends TextView {
 
     }
 
-
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //noinspection SuspiciousNameCombination
-        super.onMeasure(heightMeasureSpec, widthMeasureSpec);
-        setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
         TextPaint textPaint = getPaint();
@@ -86,6 +74,13 @@ public class VerticalTextView extends TextView {
 
         getLayout().draw(canvas);
         canvas.restore();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        //noinspection SuspiciousNameCombination
+        super.onMeasure(heightMeasureSpec, widthMeasureSpec);
+        setMeasuredDimension(getMeasuredHeight(), getMeasuredWidth());
     }
 
 }

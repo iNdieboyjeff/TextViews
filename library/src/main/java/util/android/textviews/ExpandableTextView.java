@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,26 +31,26 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  * <p>A {@link FontTextView} that can start off displaying a snippet of text with a "Read More"
  * label at the end.  When clicked the View expands to show it's complete text.</p>
- *
+ * <p>
  * <p>The colour and text of the "Read More" label is customisable.</p>
- *
+ * <p>
  * <p>The number of lines displayed when in the contracted state is also customisable.</p>
- *
+ * <p>
  * <p>This view is able to save and restore it's state following things like screen rotation.</p>
  *
  * @author Jeff Sutton
  */
 public class ExpandableTextView extends FontTextView {
-
-    private static final String LOG_TAG = ExpandableTextView.class.getSimpleName();
 
     private static final int DEFAULT_TRIM = 4;
     private static final String ELLIPSIS = "\u2026";
@@ -69,20 +69,16 @@ public class ExpandableTextView extends FontTextView {
 
     public ExpandableTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(attrs);
+        initComponent(attrs);
     }
 
     public ExpandableTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs);
+        initComponent(attrs);
     }
 
-    public ExpandableTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-    }
 
-    private void init(AttributeSet attrs) {
+    private void initComponent(AttributeSet attrs) {
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.ExpandableTextView);
         this.lineLength = typedArray.getInt(R.styleable.ExpandableTextView_trimLength, DEFAULT_TRIM);
         setMaxLines(lineLength);
@@ -145,7 +141,7 @@ public class ExpandableTextView extends FontTextView {
                         if (needsShortening) {
                             int start = 0;
                             if (expDif <= 0) {
-                             start = l.getLineEnd(lines - 1) - (getExpansionText().length() +
+                                start = l.getLineEnd(lines - 1) - (getExpansionText().length() +
                                         ELLIPSIS.length());
                             } else {
                                 if (l.getWidth() - (l.getLineWidth(lines - 1) + expSize) > 0) {
@@ -161,6 +157,8 @@ public class ExpandableTextView extends FontTextView {
                                             }
                                             start = l.getLineEnd(lines - 1) - i;
                                         } catch (Exception ignored) {
+                                            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
+                                                    .log(Level.OFF, ignored.getMessage(), ignored);
                                         }
                                     }
                                 } else {
@@ -176,22 +174,24 @@ public class ExpandableTextView extends FontTextView {
                                             }
                                             start = l.getLineEnd(lines - 1) - i;
                                         } catch (Exception ignored) {
+                                            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
+                                                    .log(Level.OFF, ignored.getMessage(), ignored);
                                         }
                                     }
                                 }
                             }
-                            String s =  getText().subSequence(0,start).toString();
+                            String s = getText().subSequence(0, start).toString();
                             if (s.endsWith("\n")) {
-                                s = s.substring(0, s.length()-1);
+                                s = s.substring(0, s.length() - 1);
                                 start--;
                             }
                             text = SpannableStringBuilder.valueOf(s + ELLIPSIS + " " + getExpansionText());
                             text.setSpan(expansionSpan, start + ELLIPSIS.length() + 1, s.length() + ELLIPSIS.length() + getExpansionText().length() + 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
                         } else {
                             int start = l.getLineEnd(lines - 1);
-                            String s =  getText().subSequence(0,start).toString();
+                            String s = getText().subSequence(0, start).toString();
                             if (s.endsWith("\n")) {
-                                s = s.substring(0, s.length()-1);
+                                s = s.substring(0, s.length() - 1);
                                 start--;
                             }
                             text = SpannableStringBuilder.valueOf(s + " " + getExpansionText());
@@ -212,6 +212,10 @@ public class ExpandableTextView extends FontTextView {
         }
     }
 
+    public void setExpansionText(CharSequence text) {
+        this.expansionText = text;
+    }
+
     public void setText(CharSequence text, boolean replaceOriginal) {
         super.setText(text);
         if (replaceOriginal && (originalText == null || !originalText.equals(text))) {
@@ -220,10 +224,6 @@ public class ExpandableTextView extends FontTextView {
             trim = true;
             addEllipse();
         }
-    }
-
-    public void setExpansionText(CharSequence text) {
-        this.expansionText = text;
     }
 
     public boolean getContracted() {
@@ -235,7 +235,6 @@ public class ExpandableTextView extends FontTextView {
             requestLayout();
             return;
         }
-//        new Throwable().printStackTrace();
         this.trim = state;
         if (!trim) {
             Rect bounds = new Rect();
@@ -244,13 +243,13 @@ public class ExpandableTextView extends FontTextView {
 
             int width = (int) Math.ceil((float) bounds.width() / getWidth());
 
-            final int bob = width+1;
+            final int bob = width + 1;
             setText(originalText, true);
             ObjectAnimator animation = ObjectAnimator.ofInt(
                     this,
                     "maxLines",
                     this.getLineCount(), bob);
-            animation.setDuration(12*bob);
+            animation.setDuration((long) 12 * bob);
             animation.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -276,7 +275,7 @@ public class ExpandableTextView extends FontTextView {
             animation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
                 @Override
                 public void onAnimationUpdate(ValueAnimator animation) {
-                    setMaxLines((Integer)animation.getAnimatedValue());
+                    setMaxLines((Integer) animation.getAnimatedValue());
                     setText(originalText, true);
                     requestLayout();
                 }
@@ -290,12 +289,12 @@ public class ExpandableTextView extends FontTextView {
 
             int width = (int) Math.ceil((float) bounds.width() / getWidth());
 
-            final int bob = width+1;
+            final int bob = width + 1;
             ObjectAnimator animation = ObjectAnimator.ofInt(
                     this,
                     "maxLines",
                     this.getLineCount(), lineLength);
-            animation.setDuration(12*bob);
+            animation.setDuration((long) 12 * bob);
             animation.addListener(new Animator.AnimatorListener() {
                 @Override
                 public void onAnimationStart(Animator animation) {
@@ -386,10 +385,12 @@ public class ExpandableTextView extends FontTextView {
         //required field that makes Parcelables from a Parcel
         public static final Parcelable.Creator<SavedState> CREATOR =
                 new Parcelable.Creator<SavedState>() {
+                    @Override
                     public SavedState createFromParcel(Parcel in) {
                         return new SavedState(in);
                     }
 
+                    @Override
                     public SavedState[] newArray(int size) {
                         return new SavedState[size];
                     }

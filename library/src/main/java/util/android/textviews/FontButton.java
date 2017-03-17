@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 
 package util.android.textviews;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.Button;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>A Button that allows you to set a custom Typeface</p>
@@ -29,9 +29,7 @@ import android.widget.Button;
  * @author Jeff Sutton
  * @since 1.2.4
  */
-public class FontButton extends Button {
-
-    private static final String LOG_TAG = FontButton.class.getSimpleName();
+public class FontButton extends android.support.v7.widget.AppCompatButton {
 
     public FontButton(Context context) {
         super(context);
@@ -39,17 +37,6 @@ public class FontButton extends Button {
 
     public FontButton(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context, attrs);
-    }
-
-    public FontButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init(context, attrs);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public FontButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
 
@@ -74,8 +61,15 @@ public class FontButton extends Button {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception ignored) {
+                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, ignored.getMessage(), ignored);
             }
         }
+    }
+
+
+    public FontButton(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
     }
 
 }

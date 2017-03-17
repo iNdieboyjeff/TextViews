@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import android.util.LruCache;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * <p>Maintain one typeface cache for all widgets.</p>
@@ -38,20 +40,20 @@ public class TypefaceCache {
 
     public static Typeface loadTypeface(Context context, String fontFamily) throws IOException {
         Typeface tf = sTypefaceCache.get(fontFamily);
-        if(tf == null) {
+        if (tf == null) {
 
-                Log.d(LOGTAG, "loading font: " + fontFamily);
-                tf = Typeface.createFromAsset(context.getAssets(), getAssetPath(context, fontFamily));
-                if (fontFamily.toLowerCase().endsWith("-bold")) {
-                    tf = Typeface.create(tf, Typeface.BOLD);
-                } else if (fontFamily.toLowerCase().endsWith("-regular")) {
-                    tf = Typeface.create(tf, Typeface.NORMAL);
-                } else if (fontFamily.toLowerCase().endsWith("-italic")) {
-                    tf = Typeface.create(tf, Typeface.ITALIC);
-                } else if (fontFamily.toLowerCase().endsWith("-bolditalic")) {
-                    tf = Typeface.create(tf, Typeface.BOLD_ITALIC);
-                }
-                sTypefaceCache.put(fontFamily, tf);
+            Log.d(LOGTAG, "loading font: " + fontFamily);
+            tf = Typeface.createFromAsset(context.getAssets(), getAssetPath(context, fontFamily));
+            if (fontFamily.toLowerCase().endsWith("-bold")) {
+                tf = Typeface.create(tf, Typeface.BOLD);
+            } else if (fontFamily.toLowerCase().endsWith("-regular")) {
+                tf = Typeface.create(tf, Typeface.NORMAL);
+            } else if (fontFamily.toLowerCase().endsWith("-italic")) {
+                tf = Typeface.create(tf, Typeface.ITALIC);
+            } else if (fontFamily.toLowerCase().endsWith("-bolditalic")) {
+                tf = Typeface.create(tf, Typeface.BOLD_ITALIC);
+            }
+            sTypefaceCache.put(fontFamily, tf);
 
         }
         return tf;
@@ -59,7 +61,7 @@ public class TypefaceCache {
 
     /**
      * <p>Look to see if an font exists in the assets folder.</p>
-     *
+     * <p>
      * <p>If a file cannot be found, this method will also check if a file with .tff or .otf
      * appended to the name exists.  This allows you to specify just the font name in your code,
      * rather than the full filename.</p>
@@ -70,26 +72,31 @@ public class TypefaceCache {
     private static String getAssetPath(Context context, String fontName) throws IOException {
         AssetManager assetManager = context.getResources().getAssets();
         InputStream inputStream = null;
+        String findFontName = fontName;
         try {
-            inputStream = assetManager.open(fontName);
+            inputStream = assetManager.open(findFontName);
         } catch (IOException ex) {
+            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, ex.getMessage(), ex);
             try {
-                inputStream = assetManager.open(fontName + ".ttf");
-                fontName += ".ttf";
+                inputStream = assetManager.open(findFontName + ".ttf");
+                findFontName += ".ttf";
             } catch (IOException e) {
+                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, e.getMessage(), e);
                 try {
-                    inputStream = assetManager.open(fontName + ".otf");
-                    fontName += ".otf";
+                    inputStream = assetManager.open(findFontName + ".otf");
+                    findFontName += ".otf";
                 } catch (IOException e2) {
-                    throw new IOException("Unable to load font from assets: " + fontName);
+                    Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, e2.getMessage(), e2);
+                    throw new IOException("Unable to load font from assets: " + findFontName);
                 }
             }
         } finally {
             try {
-                assert inputStream != null;
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+            } catch (IOException | NullPointerException e) {
+                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, e.getMessage(), e);
             }
         }
         return fontName;

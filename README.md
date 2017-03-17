@@ -55,8 +55,8 @@ dependencies {
     
 Place font files in your project's _assets_ directory
 
-FontTextView (and AppCompatFontTextView)
-========================================
+FontTextView
+============
 
 You can use a custom font on the view by specifying the name of the font as the
 
@@ -68,18 +68,6 @@ For example:
 
 ```xml
     <util.android.textviews.FontTextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="OpenSans-Regular.ttf"
-        android:text="@string/hello_world"
-        android:textSize="18sp" />
-```
-
-or
-
-```xml
-    <util.android.support.v7.textviews.AppCompatFontTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,14 +127,14 @@ This is a simple extension of TextView that displays rotated by 90 degrees.  To 
 android:gravity="bottom"
 ```
 
-FontVerticalTextView (and AppCompatFontVerticalTextView)
-========================================================
+FontVerticalTextView
+====================
     
 This is the same as VerticalTextView but based upon the FontTextView, allowing for custom typefaces.
 
 
-ShimmerTextView (and AppCompatShimmerTextView)
-==============================================
+ShimmerTextView
+===============
 
 This is a FontTextView that also supports the _shimmer_ effect. The colour of the reflection can be set by using
 
@@ -177,7 +165,7 @@ Where Android decides it doesn't like a TTF font it tends to substitute Droid Sa
 Licence
 ===================================
         
-        Copyright (c) 2015-2016 Jeff Sutton
+        Copyright (c) 2015-2017 Jeff Sutton
         
         Licensed under the Apache License, Version 2.0 (the "License");
         you may not use this file except in compliance with the License.

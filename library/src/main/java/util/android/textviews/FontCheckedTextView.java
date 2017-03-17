@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,60 +16,42 @@
 
 package util.android.textviews;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.LruCache;
 import android.widget.CheckedTextView;
 import android.widget.RemoteViews;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
  * <p>An extension to {@link CheckedTextView} that supports custom fonts.</p>
- *
+ * <p>
  * <p>Fonts should be located in the assets folder of your project.</p>
- *
+ * <p>
  * <p>The font for a text view can be set using the
  * {@link R.styleable#FontTextView_android_fontFamily android:fontFamily}
  * property, specifying the file name of the font you wish to use.</p>
- *
+ * <p>
  * <p>Typefaces are cached in a {@link LruCache}.</p>
- *
+ * <p>
  * <p><b>XML attributes</b></p>
- *
+ * <p>
  * <p>See {@link R.styleable#FontTextView FontTextView attributes},
  * {@link android.R.styleable#CheckedTextView CheckedTextView attributes}, {@link android.R.styleable#View View Attributes}
  *
- * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
- *
  * @author Jeff Sutton
  * @version 1.0
+ * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
  */
 @RemoteViews.RemoteView
-public class FontCheckedTextView extends CheckedTextView {
-
-    private static final String LOG_TAG = FontCheckedTextView.class.getSimpleName();
+public class FontCheckedTextView extends android.support.v7.widget.AppCompatCheckedTextView {
 
     public FontCheckedTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init(attrs);
-    }
-
-    public FontCheckedTextView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(attrs);
-    }
-
-    public FontCheckedTextView(Context context) {
-        super(context);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public FontCheckedTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
 
@@ -93,9 +75,19 @@ public class FontCheckedTextView extends CheckedTextView {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception eek) {
-                Log.e(LOG_TAG, "Unable to load and apply typeface: " + fontFamily);
+                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, eek.getMessage(), eek);
             }
         }
+    }
+
+    public FontCheckedTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(attrs);
+    }
+
+
+    public FontCheckedTextView(Context context) {
+        super(context);
     }
 
 }

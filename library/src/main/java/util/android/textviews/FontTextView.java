@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 
 package util.android.textviews;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -34,6 +33,8 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -57,7 +58,7 @@ import java.lang.reflect.Field;
  * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
  */
 @RemoteViews.RemoteView
-public class FontTextView extends TextView {
+public class FontTextView extends android.support.v7.widget.AppCompatTextView {
 
     private static final String LOG_TAG = FontTextView.class.getSimpleName();
 
@@ -66,11 +67,6 @@ public class FontTextView extends TextView {
     private static final int SANS = 1;
     private static final int SERIF = 2;
     private static final int MONOSPACE = 3;
-
-    public void setJustify(boolean justify) {
-        this.justify = justify;
-    }
-
     private boolean justify = false;
     private boolean autoMax = false;
     private int mLineY;
@@ -108,7 +104,7 @@ public class FontTextView extends TextView {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception eek) {
-                Log.e(LOG_TAG, "Unable to load and apply typeface: " + fontFamily);
+                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, eek.getMessage(), eek);
                 setTypefaceFromAttrs(fontFamily, typefaceIndex, styleIndex);
             }
         }
@@ -152,14 +148,12 @@ public class FontTextView extends TextView {
         super(context);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public FontTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-    }
-
     public boolean isJustify() {
         return justify;
+    }
+
+    public void setJustify(boolean justify) {
+        this.justify = justify;
     }
 
     private float calculateTextHeight(Paint.FontMetrics fm) {
@@ -191,7 +185,7 @@ public class FontTextView extends TextView {
 
         String text = getText().toString() + "\n";
         mLineY = -4;
-        mLineY += getTextSize() + 1;
+        mLineY += mLineY = (int) (mLineY + (getTextSize() + 1));
         Layout layout = new DynamicLayout(text, paint, (int) (mViewWidth - getTextSize()), Layout.Alignment.ALIGN_NORMAL, 0, 0.1f, true);
         int mLines = getMaxLines();
         if (mLines == -1) {
@@ -236,7 +230,7 @@ public class FontTextView extends TextView {
                 mMaximumField.setAccessible(true);
                 return mMaximumField.getInt(this);
             } catch (Exception err) {
-                err.printStackTrace();
+                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, err.getMessage(), err);
                 return -1;
             }
         }
@@ -265,6 +259,7 @@ public class FontTextView extends TextView {
     }
 
     private void drawScaledText(Canvas canvas, int lineStart, String line, float lineWidth) {
+        String newLine = line;
         float x = 0;
         if (isFirstLineOfParagraph(lineStart, line)) {
             String blanks = "  ";
@@ -272,18 +267,18 @@ public class FontTextView extends TextView {
             float bw = DynamicLayout.getDesiredWidth(blanks, getPaint());
             x += bw;
 
-            line = line.substring(3);
+            newLine = line.substring(3);
         }
 
-        float d = (mViewWidth - lineWidth) / (line.length() - 1);
+        float d = (mViewWidth - lineWidth) / (newLine.length() - 1);
         if (d > 3f) {
             d = 3;
         }
         if (d < -0.0f) {
-            line = line.substring(0, (int) (line.length() - (14.7 * Math.abs(d)))) + "\u2026";
+            newLine = newLine.substring(0, (int) (newLine.length() - (14.7 * Math.abs(d)))) + "\u2026";
             d = 0;
         }
-        for (int i = 0; i < line.length(); i++) {
+        for (int i = 0; i < newLine.length(); i++) {
             String c = String.valueOf(line.charAt(i));
             float cw = DynamicLayout.getDesiredWidth(c, getPaint());
             canvas.drawText(c, x, mLineY, getPaint());

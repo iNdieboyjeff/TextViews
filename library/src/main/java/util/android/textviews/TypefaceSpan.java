@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,11 +22,13 @@ import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class TypefaceSpan extends MetricAffectingSpan {
 
     private Typeface mTypeface;
-    private static String LOG_TAG = TypefaceSpan.class.getSimpleName();
 
 
     public TypefaceSpan(Context context, String typefaceName) {
@@ -37,8 +39,18 @@ public class TypefaceSpan extends MetricAffectingSpan {
         try {
             mTypeface = Typeface.create(TypefaceCache.loadTypeface(context, typefaceName), style);
         } catch (Exception err) {
-            mTypeface = setTypefaceFromAttrs(typefaceName,0,style );
+            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, err.getMessage(), err);
+            mTypeface = setTypefaceFromAttrs(typefaceName, 0, style);
         }
+    }
+
+    private Typeface setTypefaceFromAttrs(String familyName, int typefaceIndex, int styleIndex) {
+        Typeface tf = null;
+        if (familyName != null) {
+            tf = Typeface.create(familyName, styleIndex);
+        }
+
+        return tf;
     }
 
     @Override
@@ -55,15 +67,6 @@ public class TypefaceSpan extends MetricAffectingSpan {
 
         // Note: This flag is required for proper typeface rendering
         tp.setFlags(tp.getFlags() | Paint.SUBPIXEL_TEXT_FLAG);
-    }
-
-    private Typeface setTypefaceFromAttrs(String familyName, int typefaceIndex, int styleIndex) {
-        Typeface tf = null;
-        if (familyName != null) {
-            tf = Typeface.create(familyName, styleIndex);
-        }
-
-       return tf;
     }
 
 }

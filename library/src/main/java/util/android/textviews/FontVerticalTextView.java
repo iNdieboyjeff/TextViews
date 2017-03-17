@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,8 +30,6 @@ import android.view.Gravity;
  */
 public class FontVerticalTextView extends FontTextView {
 
-    private static final String LOGTAG = VerticalTextView.class.getSimpleName();
-
     private final boolean topDown;
 
     public FontVerticalTextView(Context context, AttributeSet attrs) {
@@ -53,7 +51,6 @@ public class FontVerticalTextView extends FontTextView {
         }
 
     }
-
 
 
     @Override

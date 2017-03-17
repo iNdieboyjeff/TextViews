@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015 Jeff Sutton
+ *  Copyright (c) 2015-2017 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 package util.android.textviews.shimmer;
+
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -203,13 +204,13 @@ public class Shimmer {
         }
     }
 
+    public boolean isAnimating() {
+        return animator != null && animator.isRunning();
+    }
+
     public void cancel() {
         if (animator != null) {
             animator.cancel();
         }
-    }
-
-    public boolean isAnimating() {
-        return animator != null && animator.isRunning();
     }
 }

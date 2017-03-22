@@ -33,8 +33,6 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.lang.reflect.Field;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**
@@ -49,9 +47,7 @@ import java.util.logging.Logger;
  * <p>
  * <p><b>XML attributes</b></p>
  * <p>
- * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes}, {@link
- * android.R.styleable#TextView TextView attributes}, {@link android.R.styleable#View View
- * Attributes}
+ * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes}
  *
  * @author Jeff Sutton
  * @version 1.0
@@ -104,7 +100,6 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception eek) {
-                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, eek.getMessage(), eek);
                 setTypefaceFromAttrs(fontFamily, typefaceIndex, styleIndex);
             }
         }
@@ -230,7 +225,6 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
                 mMaximumField.setAccessible(true);
                 return mMaximumField.getInt(this);
             } catch (Exception err) {
-                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, err.getMessage(), err);
                 return -1;
             }
         }

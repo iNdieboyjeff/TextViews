@@ -24,8 +24,6 @@ import android.util.LruCache;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <p>Maintain one typeface cache for all widgets.</p>
@@ -76,17 +74,14 @@ public class TypefaceCache {
         try {
             inputStream = assetManager.open(findFontName);
         } catch (IOException ex) {
-            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, ex.getMessage(), ex);
             try {
                 inputStream = assetManager.open(findFontName + ".ttf");
                 findFontName += ".ttf";
             } catch (IOException e) {
-                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, e.getMessage(), e);
                 try {
                     inputStream = assetManager.open(findFontName + ".otf");
                     findFontName += ".otf";
                 } catch (IOException e2) {
-                    Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, e2.getMessage(), e2);
                     throw new IOException("Unable to load font from assets: " + findFontName);
                 }
             }
@@ -96,9 +91,9 @@ public class TypefaceCache {
                     inputStream.close();
                 }
             } catch (IOException | NullPointerException e) {
-                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, e.getMessage(), e);
+                e.printStackTrace();
             }
         }
-        return fontName;
+        return findFontName;
     }
 }

@@ -35,9 +35,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.BaseAdapter;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  * <p>A {@link FontTextView} that can start off displaying a snippet of text with a "Read More"
  * label at the end.  When clicked the View expands to show it's complete text.</p>
@@ -157,8 +154,7 @@ public class ExpandableTextView extends FontTextView {
                                             }
                                             start = l.getLineEnd(lines - 1) - i;
                                         } catch (Exception ignored) {
-                                            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
-                                                    .log(Level.OFF, ignored.getMessage(), ignored);
+
                                         }
                                     }
                                 } else {
@@ -174,8 +170,7 @@ public class ExpandableTextView extends FontTextView {
                                             }
                                             start = l.getLineEnd(lines - 1) - i;
                                         } catch (Exception ignored) {
-                                            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME)
-                                                    .log(Level.OFF, ignored.getMessage(), ignored);
+
                                         }
                                     }
                                 }

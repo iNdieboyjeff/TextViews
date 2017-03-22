@@ -20,8 +20,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * <p>A Button that allows you to set a custom Typeface</p>
@@ -61,7 +59,6 @@ public class FontButton extends android.support.v7.widget.AppCompatButton {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception ignored) {
-                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, ignored.getMessage(), ignored);
             }
         }
     }

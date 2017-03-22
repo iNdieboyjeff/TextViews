@@ -22,9 +22,6 @@ import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 public class TypefaceSpan extends MetricAffectingSpan {
 
@@ -39,7 +36,6 @@ public class TypefaceSpan extends MetricAffectingSpan {
         try {
             mTypeface = Typeface.create(TypefaceCache.loadTypeface(context, typefaceName), style);
         } catch (Exception err) {
-            Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, err.getMessage(), err);
             mTypeface = setTypefaceFromAttrs(typefaceName, 0, style);
         }
     }

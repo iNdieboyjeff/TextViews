@@ -23,9 +23,6 @@ import android.util.LruCache;
 import android.widget.CheckedTextView;
 import android.widget.RemoteViews;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 
 /**
  * <p>An extension to {@link CheckedTextView} that supports custom fonts.</p>
@@ -75,7 +72,6 @@ public class FontCheckedTextView extends android.support.v7.widget.AppCompatChec
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
             } catch (Exception eek) {
-                Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).log(Level.OFF, eek.getMessage(), eek);
             }
         }
     }

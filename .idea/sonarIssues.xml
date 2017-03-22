@@ -8,6 +8,16 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../Bootstrap/app/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../Bootstrap/app/src/main/java/util/android/bootstrap/MainActivity.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/README.md">
           <value>
             <set />
@@ -33,57 +43,107 @@
             <set />
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/ExpandableTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/FontButton.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/FontCheckedTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/FontTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/FontVerticalTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/RisingFontTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/ShimmerTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/TypefaceCache.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/TypefaceSpan.java">
-          <value>
-            <set />
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/VerticalTextView.java">
-          <value>
-            <set />
-          </value>
-        </entry>
         <entry key="$PROJECT_DIR$/sample/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/sample2/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../TintableImageView/library/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/imbryk/viewPager/LoopPagerAdapterWrapper.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/imbryk/viewPager/LoopViewPager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/CirclePageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/IconPageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/IcsLinearLayout.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/LinePageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/TabPageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/TitlePageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/com/viewpagerindicator/UnderlinePageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/util/android/viewpagerindicator/CustomDurationViewPager.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/library/src/main/java/util/android/viewpagerindicator/FontableTabPageIndicator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/local.properties">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/sample3/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../ViewPagerIndicatorExtensions/settings.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../coreutilities/library/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/a.regexp">
           <value>
             <set />
           </value>

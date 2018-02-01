@@ -27,7 +27,9 @@
         <!-- Default text typeface style. -->
         <attr name="android:textStyle">
         </attr>
+        <attr name="android:textAllCaps"/>
         <attr name="justify" format="boolean"/>
+        <attr name="wordEllipsize" format="boolean"/>
         <attr name="autoMaxLines" format="boolean"/>
         <!-- Default text typeface. -->
         <attr name="android:typeface">

@@ -50,8 +50,6 @@ import util.android.util.DisplayUtils;
  */
 public class MainActivityFragment extends Fragment {
 
-    private TextView sourceCodeText;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,37 +60,9 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        sourceCodeText = (TextView) view.findViewById(R.id.textView7);
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        display.getMetrics(metrics);
 
-        int widthInPixels = metrics.widthPixels;
-        int heightInPixels = metrics.heightPixels;
-
-        float scaleFactor = metrics.density;
-
-        float widthDp = widthInPixels / scaleFactor;
-        float heightDp = heightInPixels / scaleFactor;
-
-        TextView tv1 = (TextView) view.findViewById(R.id.textView1);
-        tv1.setText(String.format(Locale.getDefault(), "Density: %s, sw%s, w%s\nDevice year: " +
-                                                           "%d\nCPU " +
-                                                          "Cores: %d, " +
-                                          "MaxFreq: %d",
-            getString(R.string.density),
-            DisplayUtils.getSmallestWidth(getActivity()),widthDp,
-            YearClass.get(getActivity()),
-            DeviceInfo.getNumberOfCPUCores(),
-            DeviceInfo.getCPUMaxFreqKHz()
-            )
-        );
-
-        ExpandableTextView etv = (ExpandableTextView) view.findViewById(R.id.textView6);
+        ExpandableTextView etv =  view.findViewById(R.id.textView6);
         etv.setContracted(true);
-
-        new Shimmer().setDuration(1500).setStartDelay(4000).setRepeatDelay(5000).start((ShimmerTextView)view.findViewById(R.id.textView12));
     }
 
     public MainActivityFragment() {
@@ -101,22 +71,6 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        styleSourceCode();
-    }
-
-    private void styleSourceCode() {
-        TypefaceSpan codeSpan = new TypefaceSpan(getActivity(), "SourceCodePro-Regular");
-        TypefaceSpan codeSpan2 = new TypefaceSpan(getActivity(), "SourceCodePro-Bold", Typeface.BOLD);
-        ForegroundColorSpan colorSpan = new ForegroundColorSpan(Color.MAGENTA);
-        ForegroundColorSpan colorSpan2 = new ForegroundColorSpan(Color.BLUE);
-
-        SpannableString title = new SpannableString(getString(R.string.code_sample));
-        title.setSpan(codeSpan, 0, title.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        title.setSpan(codeSpan2, 19, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        title.setSpan(colorSpan, 4, 15, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        title.setSpan(colorSpan2, 19, 23, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        sourceCodeText.setText(title);
     }
 
 }

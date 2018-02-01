@@ -33,6 +33,10 @@ import java.io.InputStream;
  */
 public class TypefaceCache {
 
+    private  TypefaceCache() {
+        throw new IllegalStateException("Utility class. Should not be directly instantiated");
+    }
+
     private static final String LOGTAG = TypefaceCache.class.getSimpleName();
     private static final LruCache<String, Typeface> sTypefaceCache = new LruCache<>(12);
 

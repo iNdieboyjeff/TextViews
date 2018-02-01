@@ -36,11 +36,11 @@ public class TypefaceSpan extends MetricAffectingSpan {
         try {
             mTypeface = Typeface.create(TypefaceCache.loadTypeface(context, typefaceName), style);
         } catch (Exception err) {
-            mTypeface = setTypefaceFromAttrs(typefaceName, 0, style);
+            mTypeface = setTypefaceFromAttrs(typefaceName, style);
         }
     }
 
-    private Typeface setTypefaceFromAttrs(String familyName, int typefaceIndex, int styleIndex) {
+    private Typeface setTypefaceFromAttrs(String familyName, int styleIndex) {
         Typeface tf = null;
         if (familyName != null) {
             tf = Typeface.create(familyName, styleIndex);

@@ -71,8 +71,7 @@ public class FontCheckedTextView extends android.support.v7.widget.AppCompatChec
         if (!isInEditMode()) {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
-            } catch (Exception eek) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 

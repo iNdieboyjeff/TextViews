@@ -58,8 +58,7 @@ public class FontButton extends android.support.v7.widget.AppCompatButton {
         if (!isInEditMode()) {
             try {
                 setTypeface(TypefaceCache.loadTypeface(getContext(), fontFamily));
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 

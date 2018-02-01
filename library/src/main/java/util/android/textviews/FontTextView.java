@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2015-2017 Jeff Sutton
+ *  Copyright (c) 2015-2018 Jeff Sutton
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,11 +19,10 @@ package util.android.textviews;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.text.DynamicLayout;
-import android.text.Layout;
+import android.support.annotation.RequiresApi;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -50,7 +49,7 @@ import java.lang.reflect.Field;
  * <p>See {@link util.android.textviews.R.styleable#FontTextView FontTextView attributes}
  *
  * @author Jeff Sutton
- * @version 1.0
+ * @version 2.1
  * @attr ref util.android.textviews.R.styleable#FontTextView_android_fontFamily</p>
  */
 @RemoteViews.RemoteView
@@ -58,15 +57,19 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
 
     private static final String LOG_TAG = FontTextView.class.getSimpleName();
 
+    private static final CharSequence ELLIPSIS = "\u2026";
+
+
     // Enum for the "typeface" XML parameter.
-    // TODO: How can we get this from the XML instead of hardcoding it here?
     private static final int SANS = 1;
     private static final int SERIF = 2;
     private static final int MONOSPACE = 3;
     private boolean justify = false;
     private boolean autoMax = false;
-    private int mLineY;
-    private int mViewWidth;
+    private boolean mAllCaps = false;
+    private boolean mWordEllipsize = false;
+    private int mFirstLineTextHeight = 0;
+    private Rect mLineBounds = new Rect();
 
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -91,10 +94,15 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
                 justify = ta.getBoolean(attr, false);
             } else if (attr == R.styleable.FontTextView_autoMaxLines) {
                 autoMax = ta.getBoolean(attr, false);
+            } else if (attr == R.styleable.FontTextView_android_textAllCaps) {
+                mAllCaps = ta.getBoolean(R.styleable.FontTextView_android_textAllCaps, false);
+            } else if (attr == R.styleable.FontTextView_wordEllipsize) {
+                mWordEllipsize = ta.getBoolean(R.styleable.FontTextView_wordEllipsize, false);
             }
         }
         final int typefaceIndex = ta.getInt(R.styleable.FontTextView_android_typeface, -1);
         final int styleIndex = ta.getInt(R.styleable.FontTextView_android_textStyle, -1);
+
         ta.recycle();
         if (!isInEditMode() && fontFamily != null) {
             try {
@@ -106,7 +114,7 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
     }
 
     private void setTypefaceFromAttrs(String familyName, int typefaceIndex, int styleIndex) {
-        Typeface tf = null;
+        Typeface tf;
         if (familyName != null) {
             tf = Typeface.create(familyName, styleIndex);
             if (tf != null) {
@@ -115,10 +123,6 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
             }
         }
         switch (typefaceIndex) {
-            case SANS:
-                tf = Typeface.SANS_SERIF;
-                Log.d(LOG_TAG, "Setting typeface to default sans-serif");
-                break;
 
             case SERIF:
                 tf = Typeface.SERIF;
@@ -128,6 +132,12 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
             case MONOSPACE:
                 tf = Typeface.MONOSPACE;
                 Log.d(LOG_TAG, "Setting typeface to default monospace");
+                break;
+
+            case SANS:
+            default:
+                tf = Typeface.SANS_SERIF;
+                Log.d(LOG_TAG, "Setting typeface to default sans-serif");
                 break;
         }
 
@@ -143,6 +153,11 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
         super(context);
     }
 
+    /**
+     * Should the text be justified?
+     *
+     * @return boolean Justified text on or off
+     */
     public boolean isJustify() {
         return justify;
     }
@@ -151,8 +166,36 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
         this.justify = justify;
     }
 
-    private float calculateTextHeight(Paint.FontMetrics fm) {
-        return fm.bottom - fm.top;
+    @Override
+    public void setAllCaps(boolean allCaps) {
+        mAllCaps = allCaps;
+        super.setAllCaps(allCaps);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void switchText(int resId) {
+        switchText(getResources().getString(resId));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void switchText(final String newText) {
+        animate().alpha(0).setDuration(150).withEndAction(new Runnable() {
+            @Override public void run() {
+                setText(newText);
+                animate().alpha(1).setDuration(150).start();
+            }
+        }).start();
+    }
+
+    @Override
+    public boolean onPreDraw() {
+        TextPaint paint = getPaint();
+        paint.setColor(getCurrentTextColor());
+        paint.setTypeface(getTypeface());
+        paint.setTextSize(getTextSize());
+        paint.drawableState = getDrawableState();
+
+        return super.onPreDraw();
     }
 
     @Override
@@ -160,58 +203,115 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
         if (autoMax) {
             setVisibleMaxLines();
         }
-        if (!justify) {
+        if (mWordEllipsize && !justify) {
+            onDrawRagged(canvas);
+        } else if (justify) {
+            onDrawJustified(canvas);
+        } else {
             super.onDraw(canvas);
-            return;
         }
+    }
 
-        final int compoundPaddingLeft = getCompoundPaddingLeft();
-        final int compoundPaddingTop = getCompoundPaddingTop();
-        final int compoundPaddingRight = getCompoundPaddingRight();
 
-        canvas.translate(compoundPaddingLeft,
-                compoundPaddingTop);
-        TextPaint paint = getPaint();
-        paint.setColor(getCurrentTextColor());
-        paint.setTypeface(getTypeface());
-        paint.setTextSize(getTextSize());
-        paint.drawableState = getDrawableState();
-        mViewWidth = getMeasuredWidth() - (compoundPaddingLeft + compoundPaddingRight);
+    private void onDrawJustified(Canvas canvas) {
+        // Manipulations to mTextPaint found in super.onDraw()...
+        getPaint().setColor(getCurrentTextColor());
+        getPaint().drawableState = getDrawableState();
 
-        String text = getText().toString() + "\n";
-        mLineY = -4;
-        mLineY += mLineY = (int) (mLineY + (getTextSize() + 1));
-        Layout layout = new DynamicLayout(text, paint, (int) (mViewWidth - getTextSize()), Layout.Alignment.ALIGN_NORMAL, 0, 0.1f, true);
-        int mLines = getMaxLines();
-        if (mLines == -1) {
-            mLines = Integer.MAX_VALUE;
-        }
-        for (int i = 0; i < Math.min(mLines, layout.getLineCount()); i++) {
-            int lineStart = layout.getLineStart(i);
-            int lineEnd = layout.getLineEnd(i);
-            String line;
-            float width = DynamicLayout.getDesiredWidth(text, lineStart, lineEnd, paint);
-            if (i == mLines - 1 && i < layout.getLineCount() && this.getEllipsize() ==
-                    TextUtils
-                            .TruncateAt.END) {
-                line = text.substring(lineStart, lineEnd - 2)
-                        + "\u2026";
-                width = DynamicLayout.getDesiredWidth(line, 0, line.length(), getPaint());
-                if (needScale(line)) {
-                    drawScaledText(canvas, lineStart, line, width);
+        // The actual String that contains all the words we will draw on screen
+        String fullText = mAllCaps ? getText().toString().toUpperCase() : getText().toString();
+
+        float lineSpacing = getLineHeight();
+        float drawableWidth = getDrawableWidth();
+
+        // Variables we need to traverse our fullText and build our lines
+        int lineNum = 1;
+        int lineStartIndex = 0;
+        int lastWordEnd = 0;
+        int currWordEnd = 0;
+
+        if (fullText.indexOf(' ', 0) == -1) flushWord(canvas, getPaddingTop() + lineSpacing, fullText);
+        else {
+            while (currWordEnd >= 0) {
+                lastWordEnd = currWordEnd + 1;
+                currWordEnd = fullText.indexOf(' ', lastWordEnd);
+
+                if (currWordEnd != -1) {
+                    getPaint().getTextBounds(fullText, lineStartIndex, currWordEnd, mLineBounds);
+
+                    if (mLineBounds.width() >= drawableWidth) {
+                        flushLine(canvas, lineNum, fullText.substring(lineStartIndex, lastWordEnd));
+                        lineStartIndex = lastWordEnd;
+                        lineNum++;
+                    }
+
                 } else {
-                    canvas.drawText(line, 0, mLineY, paint);
+                    getPaint().getTextBounds(fullText, lineStartIndex, fullText.length(), mLineBounds);
+
+                    if (mLineBounds.width() >= drawableWidth) {
+                        flushLine(canvas, lineNum, fullText.substring(lineStartIndex, lastWordEnd));
+                        rawFlushLine(canvas, ++lineNum, fullText.substring(lastWordEnd));
+                    } else {
+                        if (lineNum == 1) {
+                            rawFlushLine(canvas, lineNum, fullText);
+                        } else {
+                            rawFlushLine(canvas, lineNum, fullText.substring(lineStartIndex));
+                        }
+                    }
                 }
-            } else if (i < mLines - 1) {
-                line = text.substring(lineStart, lineEnd);
-                if (needScale(line) && (i < layout.getLineCount() - 1)) {
-                    drawScaledText(canvas, lineStart, line, width);
-                } else {
-                    canvas.drawText(line, 0, mLineY, paint);
-                }
+
             }
-            mLineY += getLineHeight();
+        }
+    }
 
+    private void onDrawRagged(Canvas canvas) {
+        // Manipulations to mTextPaint found in super.onDraw()...
+        getPaint().setColor(getCurrentTextColor());
+        getPaint().drawableState = getDrawableState();
+
+        // The actual String that contains all the words we will draw on screen
+        String fullText = mAllCaps ? getText().toString().toUpperCase() : getText().toString();
+
+        float lineSpacing = getLineHeight();
+        float drawableWidth = getDrawableWidth();
+
+        // Variables we need to traverse our fullText and build our lines
+        int lineNum = 1;
+        int lineStartIndex = 0;
+        int lastWordEnd = 0;
+        int currWordEnd = 0;
+
+        if (fullText.indexOf(' ', 0) == -1) flushWordRagged(canvas, getPaddingTop() + lineSpacing, fullText);
+        else {
+            while (currWordEnd >= 0) {
+                lastWordEnd = currWordEnd + 1;
+                currWordEnd = fullText.indexOf(' ', lastWordEnd);
+
+                if (currWordEnd != -1) {
+                    getPaint().getTextBounds(fullText, lineStartIndex, currWordEnd, mLineBounds);
+
+                    if (mLineBounds.width() >= drawableWidth) {
+                        flushLineRagged(canvas, lineNum, fullText.substring(lineStartIndex, lastWordEnd));
+                        lineStartIndex = lastWordEnd;
+                        lineNum++;
+                    }
+
+                } else {
+                    getPaint().getTextBounds(fullText, lineStartIndex, fullText.length(), mLineBounds);
+
+                    if (mLineBounds.width() >= drawableWidth) {
+                        flushLineRagged(canvas, lineNum, fullText.substring(lineStartIndex, lastWordEnd));
+                        rawFlushLine(canvas, ++lineNum, fullText.substring(lastWordEnd));
+                    } else {
+                        if (lineNum == 1) {
+                            rawFlushLine(canvas, lineNum, fullText);
+                        } else {
+                            rawFlushLine(canvas, lineNum, fullText.substring(lineStartIndex));
+                        }
+                    }
+                }
+
+            }
         }
     }
 
@@ -230,6 +330,10 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
         }
     }
 
+    /**
+     * Based on the size of the TextView calculate how many lines can be displayed and set
+     * this as the maxLines for the view.
+     */
     public void setVisibleMaxLines() {
         new Runnable() {
             @Override
@@ -248,41 +352,134 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
 
     }
 
-    private boolean needScale(String line) {
-        return line.length() != 0 && line.charAt(line.length() - 1) != '\n';
+    private float getDrawableWidth() {
+        return getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
     }
 
-    private void drawScaledText(Canvas canvas, int lineStart, String line, float lineWidth) {
-        String newLine = line;
-        float x = 0;
-        if (isFirstLineOfParagraph(lineStart, line)) {
-            String blanks = "  ";
-            canvas.drawText(blanks, x, mLineY, getPaint());
-            float bw = DynamicLayout.getDesiredWidth(blanks, getPaint());
-            x += bw;
+    private void setFirstLineTextHeight(String firstLine) {
+        getPaint().getTextBounds(firstLine, 0, firstLine.length(), mLineBounds);
+        mFirstLineTextHeight = mLineBounds.height();
+    }
 
-            newLine = line.substring(3);
+    private void rawFlushLine(Canvas canvas, int lineNum, String line) {
+        if (lineNum == 1) setFirstLineTextHeight(line);
+
+        String[] words = line.split("\\s+");
+
+        if (getEllipsize() == TextUtils.TruncateAt.END && lineNum == getMaxLines()) {
+            float unmodifiedWidth = getPaint().measureText(line + ELLIPSIS);
+            if (getDrawableWidth() < unmodifiedWidth) {
+                line = getEllipsizedLine(line);
+                words = line.split("\\s+");
+            } else {
+                words[words.length - 1] = ELLIPSIS.toString();
+            }
         }
 
-        float d = (mViewWidth - lineWidth) / (newLine.length() - 1);
-        if (d > 3f) {
-            d = 3;
+        StringBuilder lineBuilder = new StringBuilder();
+
+        for (String word : words) {
+            lineBuilder.append(word);
         }
-        if (d < -0.0f) {
-            newLine = newLine.substring(0, (int) (newLine.length() - (14.7 * Math.abs(d)))) + "\u2026";
-            d = 0;
+
+        line = lineBuilder.toString();
+
+        float yLine = getPaddingTop() + mFirstLineTextHeight + (lineNum - 1) * getLineHeight();
+        canvas.drawText(line, getPaddingLeft(), yLine, getPaint());
+    }
+
+    private void flushLine(Canvas canvas, int lineNum, String line) {
+        if (lineNum == 1) setFirstLineTextHeight(line);
+
+        float yLine = getPaddingTop() + mFirstLineTextHeight + (lineNum - 1) * getLineHeight();
+
+        String[] words = line.split("\\s+");
+
+        if (getEllipsize() == TextUtils.TruncateAt.END && lineNum == getMaxLines()) {
+            float unmodifiedWidth = getPaint().measureText(line + ELLIPSIS);
+            if (getDrawableWidth() > unmodifiedWidth) {
+                line = getEllipsizedLine(line);
+                words = line.split("\\s+");
+            } else {
+                words[words.length - 1] = ELLIPSIS.toString();
+            }
         }
-        for (int i = 0; i < newLine.length(); i++) {
-            String c = String.valueOf(line.charAt(i));
-            float cw = DynamicLayout.getDesiredWidth(c, getPaint());
-            canvas.drawText(c, x, mLineY, getPaint());
-            x += cw + d;
+
+        StringBuilder lineBuilder = new StringBuilder();
+
+        for (String word : words) {
+            lineBuilder.append(word);
+        }
+
+        float xStart = getPaddingLeft();
+        float wordWidth = getPaint().measureText(lineBuilder.toString());
+        float spacingWidth = (getDrawableWidth() - wordWidth) / (words.length - 1);
+
+        for (String word : words) {
+            canvas.drawText(word, xStart, yLine, getPaint());
+            xStart += getPaint().measureText(word) + spacingWidth;
         }
     }
 
+    private void flushLineRagged(Canvas canvas, int lineNum, String line) {
+        if (lineNum == 1) setFirstLineTextHeight(line);
 
-    private boolean isFirstLineOfParagraph(int lineStart, String line) {
-        return line.length() > 3 && line.charAt(0) == ' ' && line.charAt(1) == ' ';
+        float yLine = getPaddingTop() + mFirstLineTextHeight + (lineNum - 1) * getLineHeight();
+
+        String[] words = line.split("\\s+");
+
+        if (getEllipsize() == TextUtils.TruncateAt.END && lineNum == getMaxLines()) {
+            float unmodifiedWidth = getPaint().measureText(line + ELLIPSIS);
+            if (getDrawableWidth() > unmodifiedWidth) {
+                line = getEllipsizedLine(line);
+                words = line.split("\\s+");
+            } else {
+                words[words.length - 1] = ELLIPSIS.toString();
+            }
+        }
+
+        StringBuilder lineBuilder = new StringBuilder();
+
+        for (String word : words) {
+            lineBuilder.append(word);
+        }
+
+        float xStart = getPaddingLeft();
+        float spacingWidth = getPaint().measureText(" ");
+
+        for (String word : words) {
+            canvas.drawText(word, xStart, yLine, getPaint());
+            xStart += getPaint().measureText(word) + spacingWidth;
+        }
+    }
+
+    private void flushWord(Canvas canvas, float yLine, String word) {
+        float xStart = getPaddingLeft();
+        float wordWidth = getPaint().measureText(word);
+        float spacingWidth = (getDrawableWidth() - wordWidth) / (word.length() - 1);
+
+        for (int i = 0; i < word.length(); i++) {
+            canvas.drawText(word, i, i + 1, xStart, yLine, getPaint());
+            xStart += getPaint().measureText(word, i, i + 1) + spacingWidth;
+        }
+    }
+
+    private void flushWordRagged(Canvas canvas, float yLine, String word) {
+        float xStart = getPaddingLeft();
+        float spacingWidth = getPaint().measureText(" ");
+
+        for (int i = 0; i < word.length(); i++) {
+            canvas.drawText(word, i, i + 1, xStart, yLine, getPaint());
+            xStart += getPaint().measureText(word, i, i + 1) + spacingWidth;
+        }
+    }
+
+    private String getEllipsizedLine(String line) {
+        line = line.trim();
+        if (line.endsWith(".")) {
+            line = line.substring(0, line.length()-1) + ELLIPSIS;
+        }
+        return line;
     }
 
 }

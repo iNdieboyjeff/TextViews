@@ -26,7 +26,7 @@
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:visibility="visible"
-            />
+            android:fontFamily="Audiowide-Regular"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            android:maxLines="4"
+            android:fontFamily="Audiowide-Regular"
             android:text="@string/hipsum"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
@@ -54,6 +54,7 @@
             android:id="@+id/normalEllipsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="Audiowide-Regular"
             android:layout_marginBottom="6dp"
             android:maxLines="4"
             android:text="@string/hipsum"
@@ -72,6 +73,7 @@
             android:id="@+id/justifyWordEllipsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="Audiowide-Regular"
             android:layout_marginBottom="6dp"
             android:ellipsize="end"
             android:maxLines="4"
@@ -91,6 +93,7 @@
             android:id="@+id/normalWordEllipsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="Audiowide-Regular"
             android:layout_marginBottom="6dp"
             android:maxLines="4"
             android:text="@string/hipsum"
@@ -116,6 +119,7 @@
             android:textSize="16sp"
             app:expandColor="#1a6b02"
             app:expandText=" Reveal More"
+            app:justify="true"
             app:trimLength="4"/>
 
     </LinearLayout>

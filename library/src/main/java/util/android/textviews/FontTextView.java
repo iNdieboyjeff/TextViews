@@ -397,6 +397,7 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
 
         if (getEllipsize() == TextUtils.TruncateAt.END && lineNum == getMaxLines()) {
             float unmodifiedWidth = getPaint().measureText(line + ELLIPSIS);
+
             if (getDrawableWidth() > unmodifiedWidth) {
                 line = getEllipsizedLine(line);
                 words = line.split("\\s+");
@@ -478,8 +479,15 @@ public class FontTextView extends android.support.v7.widget.AppCompatTextView {
         line = line.trim();
         if (line.endsWith(".")) {
             line = line.substring(0, line.length()-1) + ELLIPSIS;
+        } else {
+            line += ELLIPSIS;
         }
         return line;
     }
 
+    private static void LOG(String message) {
+        if (BuildConfig.DEBUG) {
+            Log.d(LOG_TAG, message);
+        }
+    }
 }

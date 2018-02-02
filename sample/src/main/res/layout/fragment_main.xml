@@ -21,12 +21,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
+            app:linkType="all"
             android:maxLines="4"
             android:text="@string/hipsum"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
-            android:visibility="visible"
-            android:fontFamily="Audiowide-Regular"/>
+            android:visibility="visible"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +38,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
-            android:fontFamily="Audiowide-Regular"
+            android:autoLink="map"
             android:text="@string/hipsum"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
@@ -54,14 +54,14 @@
             android:id="@+id/normalEllipsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="Audiowide-Regular"
             android:layout_marginBottom="6dp"
+            android:autoLink="web|all"
+            android:ellipsize="end"
             android:maxLines="4"
             android:text="@string/hipsum"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:visibility="visible"
-            android:ellipsize="end"
             app:justify="false"/>
 
         <LinearLayout
@@ -73,7 +73,6 @@
             android:id="@+id/justifyWordEllipsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="Audiowide-Regular"
             android:layout_marginBottom="6dp"
             android:ellipsize="end"
             android:maxLines="4"
@@ -93,16 +92,15 @@
             android:id="@+id/normalWordEllipsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="Audiowide-Regular"
             android:layout_marginBottom="6dp"
+            android:ellipsize="end"
             android:maxLines="4"
-            android:text="@string/hipsum"
+            android:text="kfjbsdkjsd dfsohfos sfohfs fsoifsd fsdiofs fsdiofsd fsdoif to be or not be be that is the question"
             android:textColor="?android:attr/textColorPrimary"
             android:textSize="16sp"
             android:visibility="visible"
-            android:ellipsize="end"
-            app:wordEllipsize="true"
-            app:justify="false"/>
+            app:justify="false"
+            app:wordEllipsize="true"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,8 +115,8 @@
             android:ellipsize="end"
             android:text="@string/hipsum"
             android:textSize="16sp"
-            app:expandColor="#1a6b02"
-            app:expandText=" Reveal More"
+            app:expansionTextColor="#1a6b02"
+            app:expansionText=" Reveal More"
             app:justify="true"
             app:trimLength="4"/>
 

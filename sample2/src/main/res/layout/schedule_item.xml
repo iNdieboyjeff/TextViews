@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="Johnston"
         android:ellipsize="end"
-        app:expandColor="#f72adb"
+        app:expansionTextColor="#f72adb"
         app:justify="true"
         android:textSize="16sp"
         app:trimLength="2"/>

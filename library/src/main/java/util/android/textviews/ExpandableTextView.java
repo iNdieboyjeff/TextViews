@@ -97,8 +97,8 @@ public class ExpandableTextView extends FontTextView {
 
         vto.addOnGlobalLayoutListener(globalListener);
         vto.addOnPreDrawListener(preDrawListener);
-        expandTextColour = typedArray.getColor(R.styleable.ExpandableTextView_expandColor, Color.BLACK);
-        expansionText = typedArray.getText(R.styleable.ExpandableTextView_expandText);
+        expandTextColour = typedArray.getColor(R.styleable.ExpandableTextView_expansionTextColor, Color.BLACK);
+        expansionText = typedArray.getText(R.styleable.ExpandableTextView_expansionText);
         originalText = this.getText();
         typedArray.recycle();
         OnClickListener clickListener = new OnClickListener() {

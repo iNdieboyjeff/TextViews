@@ -16,35 +16,39 @@
   -->
 
 <resources>
-    <declare-styleable name="ExpandableTextView">
-        <attr name="trimLength" format="integer" />
-        <attr name="expandColor" format="color" />
-        <attr name="expandText" format="string" />
-    </declare-styleable>
-
     <declare-styleable name="FontTextView">
         <attr name="android:fontFamily"/>
-        <!-- Default text typeface style. -->
-        <attr name="android:textStyle">
-        </attr>
+        <attr name="android:textStyle" />
         <attr name="android:textAllCaps"/>
         <attr name="justify" format="boolean"/>
         <attr name="wordEllipsize" format="boolean"/>
         <attr name="autoMaxLines" format="boolean"/>
-        <!-- Default text typeface. -->
-        <attr name="android:typeface">
+        <attr name="android:typeface" />
+        <attr name="linkTextColor" format="color" />
+        <attr name="linkTextUnderline" format="boolean" />
+        <attr name="linkType" format="integer">
+            <flag name="none" value="0" />
+            <flag name="web" value="1" />
+            <flag name="hashtag" value="2" />
+            <flag name="screenname" value="4" />
+            <flag name="email" value="8" />
+            <flag name="all" value="15" />
         </attr>
     </declare-styleable>
 
-    <declare-styleable name="AppCompatFontTextView">
-        <attr name="android:fontFamily"/>
-        <attr name="android:textStyle"/>
+
+    <declare-styleable name="ExpandableTextView">
+        <attr name="trimLength" format="integer" />
+        <attr name="expansionTextColor" format="color" />
+        <attr name="expansionText" format="string" />
     </declare-styleable>
+
 
     <declare-styleable name="FontButton">
         <attr name="android:fontFamily"/>
         <attr name="android:textStyle"/>
     </declare-styleable>
+
 
     <declare-styleable name="ShimmerView">
         <attr name="reflectionColor" format="color"/>

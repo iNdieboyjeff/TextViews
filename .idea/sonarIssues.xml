@@ -103,7 +103,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/sample/src/main/res/values/strings.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/sample2/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/sample2/src/main/res/layout/schedule_item.xml">
           <value>
             <set />
           </value>
@@ -194,6 +204,21 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../coreutilities/library/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/build/intermediates/res/merged/full/release/values/values.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/res/layout/item_content_highlight.xml">
           <value>
             <set />
           </value>

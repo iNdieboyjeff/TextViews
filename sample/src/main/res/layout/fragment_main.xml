@@ -1,124 +1,64 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/scrollView"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    tools:context="com.example.textviewsample.MainActivityFragment"
-    tools:showIn="@layout/activity_main">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/colorPrimary">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/activity_vertical_margin"
+
+    <util.android.textviews.FontTextView
+        android:id="@+id/normal"
+        android:layout_width="wrap_content"
+        android:layout_height="234dp"
+        android:background="@android:color/background_light"
+        android:ellipsize="end"
+        android:paddingBottom="4dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin">
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:text="@string/hipsum"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="12sp"
+        android:visibility="visible"
+        app:autoMaxLines="false"
+        app:justify="false"
+        app:linkTextUnderline="true"
+        app:linkType="all"/>
 
-        <util.android.textviews.FontTextView
-            android:id="@+id/normal"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:alpha="0.7"
+        android:background="@android:color/darker_gray"
+        android:elevation="7dp"
+        android:minHeight="100dp"
+        android:padding="8dp" tools:targetApi="lollipop">
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/justify_text"/>
+
+        <CheckBox
+            android:id="@+id/checkBox2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            app:linkType="all"
-            android:maxLines="4"
-            android:text="@string/hipsum"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            android:visibility="visible"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/checkBox"
+            android:text="@string/ellipsize_words"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"/>
-
-        <util.android.textviews.FontTextView
-            android:id="@+id/justified"
+        <CheckBox
+            android:id="@+id/checkBox3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:autoLink="map"
-            android:text="@string/hipsum"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            android:visibility="visible"
-            app:justify="true"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"/>
-
-        <util.android.textviews.FontTextView
-            android:id="@+id/normalEllipsize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:autoLink="web|all"
-            android:ellipsize="end"
-            android:maxLines="4"
-            android:text="@string/hipsum"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            android:visibility="visible"
-            app:justify="false"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"/>
-
-        <util.android.textviews.FontTextView
-            android:id="@+id/justifyWordEllipsize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:ellipsize="end"
-            android:maxLines="4"
-            android:text="@string/hipsum"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            android:visibility="visible"
-            app:justify="true"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"/>
-
-        <util.android.textviews.FontTextView
-            android:id="@+id/normalWordEllipsize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:ellipsize="end"
-            android:maxLines="4"
-            android:text="kfjbsdkjsd dfsohfos sfohfs fsoifsd fsdiofs fsdiofsd fsdoif to be or not be be that is the question"
-            android:textColor="?android:attr/textColorPrimary"
-            android:textSize="16sp"
-            android:visibility="visible"
-            app:justify="false"
-            app:wordEllipsize="true"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@android:color/darker_gray"/>
-
-        <util.android.textviews.ExpandableTextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:ellipsize="end"
-            android:text="@string/hipsum"
-            android:textSize="16sp"
-            app:expansionTextColor="#1a6b02"
-            app:expansionText=" Reveal More"
-            app:justify="true"
-            app:trimLength="4"/>
-
-    </LinearLayout>
-</ScrollView>
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="41dp"
+            android:layout_marginStart="41dp"
+            android:layout_toEndOf="@+id/checkBox2"
+            android:layout_toRightOf="@+id/checkBox2"
+            android:text="@string/auto_max_lines"/>
+    </RelativeLayout>
+</FrameLayout>

@@ -48,6 +48,11 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/EmojiFontTextView.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/library/src/main/java/util/android/textviews/ExpandableTextView.java">
           <value>
             <set />
@@ -93,7 +98,17 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/sample/src/main/AndroidManifest.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/sample/src/main/java/com/example/textviewsample/MainActivityFragment.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/sample/src/main/java/com/example/textviewsample/SampleApplication.java">
           <value>
             <set />
           </value>
@@ -218,12 +233,37 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/java/tv/accedo/nbcu/loud/adapters/component/ContentHighlightPagerAdapter.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/java/tv/accedo/nbcu/loud/player/NBCUPlayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/java/tv/accedo/nbcu/loud/player/layeredvideo/PlaybackControlLayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/java/tv/accedo/nbcu/loud/player/layeredvideo/SimpleVideoPlayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/res/layout/item_content_highlight.xml">
           <value>
             <set />
           </value>
         </entry>
         <entry key="/a.regexp">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/fragment.java">
           <value>
             <set />
           </value>

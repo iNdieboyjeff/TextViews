@@ -211,6 +211,7 @@ public class ExpandableTextView extends FontTextView {
         this.expansionText = text;
     }
 
+    @Override
     public void setText(CharSequence text, boolean replaceOriginal) {
         super.setText(text);
         if (replaceOriginal && (originalText == null || !originalText.equals(text))) {

@@ -5,11 +5,12 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        google()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
-        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.13'
     }
 
 }
@@ -26,7 +27,7 @@ apply plugin: 'com.jfrog.bintray'
 
 allprojects {
     group = 'util.android.textviews'
-    version = '2.2'
+    version = '2.4'
 }
 
 android {
@@ -106,6 +107,6 @@ bintray {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
 }
 

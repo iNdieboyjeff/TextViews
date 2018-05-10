@@ -95,7 +95,9 @@ public class TypefaceCache {
                     inputStream.close();
                 }
             } catch (IOException | NullPointerException e) {
-                e.printStackTrace();
+                if (BuildConfig.DEBUG) {
+                    e.printStackTrace();
+                }
             }
         }
         return findFontName;

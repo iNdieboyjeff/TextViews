@@ -547,7 +547,6 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        LOG("onDraw() [autoMax: " + autoMax + "]");
         if (autoMax) {
             setVisibleMaxLines();
         }
@@ -677,7 +676,12 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 1));
         }
 
-        if (getEllipsize() == TextUtils.TruncateAt.END && lineNum == getMaxLines()) {
+        float height = getLineHeight();
+        // calculate the no of lines that will fit in the text box based on this height
+        int heightOfTextView = getHeight() - (getPaddingBottom() + getPaddingTop());
+        int noLinesInTextView = (int) (heightOfTextView / height);
+
+        if (getEllipsize() == TextUtils.TruncateAt.END && (lineNum == getMaxLines() || lineNum == noLinesInTextView)) {
             builder.append(ELLIPSIS);
             builder = tryEllipsize(builder);
         }
@@ -713,14 +717,9 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
                 if (fgSpans.length > 0) {
                     for (CharacterStyle span : fgSpans) {
                         span.updateDrawState((TextPaint) mTextPaint);
-                        if ((span instanceof  LinkSpan || span instanceof TypefaceSpan
-                                || span instanceof android.text.style.TypefaceSpan)) {
-                            xEnd = xStart + mTextPaint.measureText(spanLine, i, next) + spacingWidth;
-                        }
                         canvas.drawText(spanLine, i, next, xStart, yLine, mTextPaint);
                         getDefaultTextPaint();
                     }
-
                     xStart = xEnd;
                 } else {
                     canvas.drawText(spanLine, i, next, xStart, yLine, mTextPaint);
@@ -736,9 +735,9 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         int lastsplit = 0;
         for (int c = 0; c < builder.length(); c++) {
             if (builder.charAt(c) == delimiter) {
-                CharSequence subSeq = builder.subSequence(lastsplit, c);
+                CharSequence subSeq = builder.subSequence(lastsplit, c + 1);
                 words.add(subSeq);
-                lastsplit = c;
+                lastsplit = c + 1;
             }
         }
         if (lastsplit < builder.length()) {
@@ -751,14 +750,13 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
 
     protected SpannableStringBuilder tryEllipsize(SpannableStringBuilder builder) {
         LOG("tryEllipsize() " + builder.toString());
-        while (builder.length() > 0 && (builder.charAt(builder.length()-1) == '\n'
-                || builder.charAt(builder.length()-1) ==
-                ELLIPSIS.charAt(0))) {
-            builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 2));
-            LOG("trimming to: " + builder.toString());
+        while (builder.length() > 0 && (builder.charAt(builder.length()-1) == '\n')) {
+            builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 1));
+            LOG("tryEllipsize() trimming to: " + builder.toString());
         }
+        LOG("tryEllipsize() " + builder.toString());
         float unmodifiedWidth = getDefaultTextPaint().measureText(builder, 0, builder.length());
-        LOG("drawableWidth: " + getDrawableWidth() + ", unmodifiedWidth: " + unmodifiedWidth);
+        LOG("tryEllipsize() drawableWidth: " + getDrawableWidth() + ", unmodifiedWidth: " + unmodifiedWidth);
         if (getDrawableWidth() > unmodifiedWidth) {
             return builder;
         } else {
@@ -788,7 +786,13 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 1));
         }
 
-        if (getEllipsize() == TextUtils.TruncateAt.END && lineNum == getMaxLines()) {
+        float height = getLineHeight();
+        // calculate the no of lines that will fit in the text box based on this height
+        int heightOfTextView = getHeight() - (getPaddingBottom() + getPaddingTop());
+        int noLinesInTextView = (int) (heightOfTextView / height);
+
+        if (getEllipsize() == TextUtils.TruncateAt.END && (lineNum == getMaxLines() || lineNum == noLinesInTextView)) {
+            builder.append(ELLIPSIS);
             builder = tryEllipsize(builder);
         }
 
@@ -853,7 +857,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
     }
 
     private float getDrawableWidth() {
-        return getMeasuredWidth() - getPaddingLeft() - getPaddingRight();
+        return getMeasuredWidth() - (getPaddingLeft() + getPaddingRight());
     }
 
     /**
@@ -916,16 +920,17 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
     }
 
     @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
     }
 
     @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
 
     }
 
@@ -974,7 +979,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
                     return false;
                 }
             }
-            return Touch.onTouchEvent(widget, buffer, event);
+            return true;
         }
     }
 

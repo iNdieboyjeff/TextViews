@@ -223,6 +223,26 @@
             <set />
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/../mux-stats-sdk-exoplayer/MuxExoPlayer/build.gradle">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../mux-stats-sdk-exoplayer/MuxExoPlayer/src/main/java/com/mux/stats/sdk/muxstats/MuxBaseExoPlayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../mux-stats-sdk-exoplayer/MuxExoPlayer/src/main/java/com/mux/stats/sdk/muxstats/MuxNetworkRequests.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../mux-stats-sdk-exoplayer/MuxExoPlayer/src/r2_8_0/java/com/mux/stats/sdk/muxstats/MuxStatsExoPlayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
         <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/build.gradle">
           <value>
             <set />
@@ -239,6 +259,11 @@
           </value>
         </entry>
         <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/java/tv/accedo/nbcu/loud/player/NBCUPlayer.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/../nbcu-louda-android/app/src/main/java/tv/accedo/nbcu/loud/player/analytics/MuxSessionManager.java">
           <value>
             <set />
           </value>

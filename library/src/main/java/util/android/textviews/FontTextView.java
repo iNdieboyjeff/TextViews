@@ -31,7 +31,6 @@ import android.text.Layout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -70,8 +69,8 @@ import java.util.regex.Pattern;
  * <p>When using justified text or ellipsize words support for styled text is currently limited.
  * Styles that modify the font, especially over lines, may result in unexpected behaviour.
  *
- * <p>It is possible to have the view auto link any or all links of type e-mail address,
- * hashtag and username/mention. Click handling on links is also supported via a {@link OnLinkClickListener}
+ * <p>It is possible to have the view auto link any or all links of type e-mail address, hashtag and
+ * username/mention. Click handling on links is also supported via a {@link OnLinkClickListener}
  *
  * <p><b>XML attributes</b>
  *
@@ -93,7 +92,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             LINK_TYPE_WEB | LINK_TYPE_HASHTAG | LINK_TYPE_SCREENNAME | LINK_TYPE_EMAIL;
 
     private static final String LOG_TAG = FontTextView.class.getSimpleName();
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
     private static final CharSequence ELLIPSIS = "\u2026";
 
@@ -121,6 +120,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
     private boolean hitLink = false;
     private List<Hyperlink> links = new ArrayList<>();
     private OnLinkClickListener listener;
+
     public FontTextView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs);
@@ -220,6 +220,21 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         setTypeface(tf, styleIndex);
     }
 
+    @Override
+    public int getMaxLines() {
+        if (Build.VERSION.SDK_INT >= 16) {
+            return super.getMaxLines();
+        } else {
+            try {
+                Field mMaximumField = this.getClass().getDeclaredField("mMaximum");
+                mMaximumField.setAccessible(true);
+                return mMaximumField.getInt(this);
+            } catch (Exception err) {
+                return -1;
+            }
+        }
+    }
+
     public void setLinkText(CharSequence text) {
         links.clear();
 
@@ -244,10 +259,8 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             }
 
             MovementMethod m = getMovementMethod();
-            if ((m == null) || !(m instanceof LinkMovementMethod)) {
-                if (getLinksClickable()) {
-                    setMovementMethod(LocalLinkMovementMethod.getInstance());
-                }
+            if ((!(m instanceof LinkMovementMethod)) && getLinksClickable()) {
+                setMovementMethod(LocalLinkMovementMethod.getInstance());
             }
         }
 
@@ -266,8 +279,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
     }
 
     private boolean containsLinkType(int type) {
-        boolean containsType = (linkType & type) == type;
-        return containsType;
+        return (linkType & type) == type;
     }
 
     private void gatherLinks(CharSequence s, Pattern pattern, int type) {
@@ -292,6 +304,56 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         }
     }
 
+    @Override
+    public boolean onPreDraw() {
+        getDefaultTextPaint();
+        return super.onPreDraw();
+    }
+
+    private TextPaint getDefaultTextPaint() {
+        TextPaint paint = getPaint();
+        paint.setColor(getCurrentTextColor());
+        paint.setTypeface(getTypeface());
+        paint.setTextSize(getTextSize());
+        paint.setUnderlineText(false);
+        paint.drawableState = getDrawableState();
+        return paint;
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if (autoMax) {
+            setVisibleMaxLines();
+        }
+        if (mWordEllipsize && !justify) {
+            onDrawRagged(canvas);
+        } else if (justify) {
+            onDrawJustified(canvas);
+        } else {
+            super.onDraw(canvas);
+        }
+    }
+
+    @Override
+    public void setAllCaps(boolean allCaps) {
+        mAllCaps = allCaps;
+        super.setAllCaps(allCaps);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        hitLink = false;
+        boolean res = super.onTouchEvent(event);
+
+        if (isDetectingLinks()) return hitLink;
+
+        return res;
+    }
+
+    public boolean isDetectingLinks() {
+        return linkType != LINK_TYPE_NONE;
+    }
+
     public FontTextView(Context context) {
         super(context);
     }
@@ -301,13 +363,13 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         init(attrs);
     }
 
-    public static float convertPixelsToDp(float px){
+    public static float convertPixelsToDp(float px) {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float dp = px / (metrics.densityDpi / 160f);
         return Math.round(dp);
     }
 
-    public static float convertDpToPixel(float dp){
+    public static float convertDpToPixel(float dp) {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return Math.round(px);
@@ -341,27 +403,6 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
     public void setOnLinkClickListener(OnLinkClickListener listener) {
         this.listener = listener;
     }
-
-    //    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    //    public void switchText(int resId) {
-    //        switchText(getResources().getString(resId));
-    //    }
-    //
-    //    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    //    public void switchText(final String newText) {
-    //        animate()
-    //                .alpha(0)
-    //                .setDuration(150)
-    //                .withEndAction(
-    //                        new Runnable() {
-    //                            @Override
-    //                            public void run() {
-    //                                setText(newText);
-    //                                animate().alpha(1).setDuration(150).start();
-    //                            }
-    //                        })
-    //                .start();
-    //    }
 
     /**
      * Should the text be justified?
@@ -500,7 +541,8 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
                                     fullText, lineStartIndex, fullText.length(), mLineBounds);
 
                     if (mLineBounds.width() >= drawableWidth) {
-                        flushLineRagged(canvas, lineNum, fullText.substring(lineStartIndex, lastWordEnd));
+                        flushLineRagged(
+                                canvas, lineNum, fullText.substring(lineStartIndex, lastWordEnd));
                         rawFlushLine(canvas, ++lineNum, fullText.substring(lastWordEnd));
                     } else {
                         if (lineNum == 1) {
@@ -512,71 +554,6 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
                 }
             }
         }
-    }
-
-    @Override
-    public int getMaxLines() {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return super.getMaxLines();
-        } else {
-            try {
-                Field mMaximumField = this.getClass().getDeclaredField("mMaximum");
-                mMaximumField.setAccessible(true);
-                return mMaximumField.getInt(this);
-            } catch (Exception err) {
-                return -1;
-            }
-        }
-    }
-
-    @Override
-    public boolean onPreDraw() {
-        getDefaultTextPaint();
-        return super.onPreDraw();
-    }
-
-    private TextPaint getDefaultTextPaint() {
-        TextPaint paint = getPaint();
-        paint.setColor(getCurrentTextColor());
-        paint.setTypeface(getTypeface());
-        paint.setTextSize(getTextSize());
-        paint.setUnderlineText(false);
-        paint.drawableState = getDrawableState();
-        return paint;
-    }
-
-    @Override
-    protected void onDraw(Canvas canvas) {
-        if (autoMax) {
-            setVisibleMaxLines();
-        }
-        if (mWordEllipsize && !justify) {
-            onDrawRagged(canvas);
-        } else if (justify) {
-            onDrawJustified(canvas);
-        } else {
-            super.onDraw(canvas);
-        }
-    }
-
-    @Override
-    public void setAllCaps(boolean allCaps) {
-        mAllCaps = allCaps;
-        super.setAllCaps(allCaps);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        hitLink = false;
-        boolean res = super.onTouchEvent(event);
-
-        if (isDetectingLinks()) return hitLink;
-
-        return res;
-    }
-
-    public boolean isDetectingLinks() {
-        return linkType != LINK_TYPE_NONE;
     }
 
     /**
@@ -596,7 +573,13 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
                     int noLinesInTextView = (int) (heightOfTextView / height);
                     // set max lines to this
                     setMaxLines(noLinesInTextView);
-                    LOG("setVisibleMaxLines() " + convertPixelsToDp(height) + ", " + convertPixelsToDp(heightOfTextView) + ", " + noLinesInTextView);
+                    LOG(
+                            "setVisibleMaxLines() "
+                                    + convertPixelsToDp(height)
+                                    + ", "
+                                    + convertPixelsToDp(heightOfTextView)
+                                    + ", "
+                                    + noLinesInTextView);
                 }
             }
         }.run();
@@ -628,7 +611,6 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
 
         SpannableStringBuilder spanLine = builder;
         // draw each span one at a time
-        next = -1;
         float xStart = getPaddingLeft();
         float xEnd;
         for (int i = 0; i < spanLine.length(); i = next) {
@@ -643,14 +625,17 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             Typeface oldTypeface = null;
             if (fgSpans.length > 0) {
                 for (CharacterStyle span : fgSpans) {
-                    if (span instanceof TypefaceSpan || span instanceof android.text.style.TypefaceSpan) {
+                    if (span instanceof TypefaceSpan
+                            || span instanceof android.text.style.TypefaceSpan) {
                         oldTypeface = mTextPaint.getTypeface();
                     }
                     span.updateDrawState((TextPaint) mTextPaint);
                     canvas.drawText(spanLine, i, next, xStart, yLine, mTextPaint);
                     mTextPaint = getDefaultTextPaint();
-                    if ((span instanceof  LinkSpan || span instanceof TypefaceSpan
-                            || span instanceof android.text.style.TypefaceSpan) && oldTypeface != null) {
+                    if ((span instanceof LinkSpan
+                                    || span instanceof TypefaceSpan
+                                    || span instanceof android.text.style.TypefaceSpan)
+                            && oldTypeface != null) {
                         xEnd = xStart + mTextPaint.measureText(spanLine, i, next);
                         mTextPaint.setTypeface(oldTypeface);
                     }
@@ -672,7 +657,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         }
 
         SpannableStringBuilder builder = new SpannableStringBuilder(line);
-        if (builder.charAt(builder.length()-1) == ' ') {
+        if (builder.charAt(builder.length() - 1) == ' ') {
             builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 1));
         }
 
@@ -681,7 +666,8 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         int heightOfTextView = getHeight() - (getPaddingBottom() + getPaddingTop());
         int noLinesInTextView = (int) (heightOfTextView / height);
 
-        if (getEllipsize() == TextUtils.TruncateAt.END && (lineNum == getMaxLines() || lineNum == noLinesInTextView)) {
+        if (getEllipsize() == TextUtils.TruncateAt.END
+                && (lineNum == getMaxLines() || lineNum == noLinesInTextView)) {
             builder.append(ELLIPSIS);
             builder = tryEllipsize(builder);
         }
@@ -692,7 +678,8 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         float yLine = getPaddingTop() + mFirstLineTextHeight + (lineNum - 1) * getLineHeight();
 
         if (!autoMax && yLine + getLineHeight() > getHeight() - getPaddingBottom()) {
-            canvas.clipRect(0, yLine - getLineHeight(), getWidth(), getHeight() - getPaddingBottom());
+            canvas.clipRect(
+                    0, yLine - getLineHeight(), getWidth(), getHeight() - getPaddingBottom());
         }
 
         float xStart = getPaddingLeft();
@@ -707,7 +694,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             // draw each span one at a time
             float xEnd = xStart;
             for (int i = 0; i < spanLine.length(); i = next) {
-                LOG("Writing: \"" + spanLine.toString()+ "\"");
+                LOG("Writing: \"" + spanLine.toString() + "\"");
                 // find the next span transition
                 next = spanLine.nextSpanTransition(i, spanLine.length(), null);
                 // measure the length of the span
@@ -727,7 +714,6 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
             }
             xStart = xEnd;
         }
-
     }
 
     private CharSequence[] splitCharSequence(CharSequence builder, char delimiter) {
@@ -750,13 +736,17 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
 
     protected SpannableStringBuilder tryEllipsize(SpannableStringBuilder builder) {
         LOG("tryEllipsize() " + builder.toString());
-        while (builder.length() > 0 && (builder.charAt(builder.length()-1) == '\n')) {
+        while (builder.length() > 0 && (builder.charAt(builder.length() - 1) == '\n')) {
             builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 1));
             LOG("tryEllipsize() trimming to: " + builder.toString());
         }
         LOG("tryEllipsize() " + builder.toString());
         float unmodifiedWidth = getDefaultTextPaint().measureText(builder, 0, builder.length());
-        LOG("tryEllipsize() drawableWidth: " + getDrawableWidth() + ", unmodifiedWidth: " + unmodifiedWidth);
+        LOG(
+                "tryEllipsize() drawableWidth: "
+                        + getDrawableWidth()
+                        + ", unmodifiedWidth: "
+                        + unmodifiedWidth);
         if (getDrawableWidth() > unmodifiedWidth) {
             return builder;
         } else {
@@ -782,7 +772,7 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         }
 
         SpannableStringBuilder builder = new SpannableStringBuilder(line);
-        if (builder.charAt(builder.length()-1) == ' ') {
+        if (builder.charAt(builder.length() - 1) == ' ') {
             builder = new SpannableStringBuilder(builder.subSequence(0, builder.length() - 1));
         }
 
@@ -791,7 +781,8 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         int heightOfTextView = getHeight() - (getPaddingBottom() + getPaddingTop());
         int noLinesInTextView = (int) (heightOfTextView / height);
 
-        if (getEllipsize() == TextUtils.TruncateAt.END && (lineNum == getMaxLines() || lineNum == noLinesInTextView)) {
+        if (getEllipsize() == TextUtils.TruncateAt.END
+                && (lineNum == getMaxLines() || lineNum == noLinesInTextView)) {
             builder.append(ELLIPSIS);
             builder = tryEllipsize(builder);
         }
@@ -802,11 +793,12 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
         float yLine = getPaddingTop() + mFirstLineTextHeight + (lineNum - 1) * getLineHeight();
 
         if (!autoMax && yLine + getLineHeight() > getHeight() - getPaddingBottom()) {
-            canvas.clipRect(0, yLine - getLineHeight(), getWidth(), getHeight() - getPaddingBottom());
+            canvas.clipRect(
+                    0, yLine - getLineHeight(), getWidth(), getHeight() - getPaddingBottom());
         }
 
         float xStart = getPaddingLeft();
-        float wordWidth = mTextPaint.measureText(builder, 0, builder.length());
+        mTextPaint.measureText(builder, 0, builder.length());
         float spacingWidth = 0;
 
         int next;
@@ -921,17 +913,17 @@ public class FontTextView extends AppCompatTextView implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        // Do nothing
     }
 
     @Override
     public void afterTextChanged(Editable s) {
+        // Do nothing
+    }
 
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        // Do nothing
     }
 
     public interface OnLinkClickListener {

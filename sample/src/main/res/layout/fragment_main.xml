@@ -5,61 +5,87 @@
              android:background="@color/colorPrimary">
 
 
-    <util.android.textviews.FontTextView
-        android:id="@+id/normal"
-        android:layout_width="wrap_content"
-        android:layout_height="234dp"
-        android:background="@android:color/background_light"
-        android:ellipsize="end"
-        android:linksClickable="true"
-        android:paddingBottom="4dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="@string/hipsum"
-        android:textColor="?android:attr/textColorPrimary"
-        android:textSize="12sp"
-        android:visibility="visible"
-        app:autoMaxLines="false"
-        app:justify="false"
-        app:linkTextUnderline="true"
-        app:linkType="all"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <util.android.textviews.FontTextView
+            android:id="@+id/normal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light"
+            android:ellipsize="end"
+            android:linksClickable="true"
+            android:padding="16dp"
+            android:text="@string/hipsum"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="18sp"
+            android:visibility="visible"
+            app:autoMaxLines="false"
+            app:justify="false"
+            app:linkTextUnderline="true"
+            app:linkType="all"/>
+    </ScrollView>
 
 
     <RelativeLayout
+        android:id="@+id/tool_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:alpha="0.7"
+        android:alpha="0.8"
         android:background="@android:color/darker_gray"
-        android:elevation="7dp"
-        android:minHeight="100dp"
-        android:padding="8dp" tools:targetApi="lollipop">
+        android:elevation="20dp"
+        tools:targetApi="lollipop">
 
-        <CheckBox
-            android:id="@+id/checkBox"
+        <util.android.textviews.FontVerticalTextView
+            android:id="@+id/fontVerticalTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/tool_sub_container"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignTop="@id/tool_sub_container"
+            android:background="@android:color/background_dark"
+            android:gravity="bottom|center"
+            android:padding="4dp"
+            android:text="Options"
+            android:textColor="@android:color/white"
+            android:textStyle="bold|italic"/>
+
+        <RelativeLayout
+            android:id="@+id/tool_sub_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/justify_text"/>
+            android:layout_toRightOf="@+id/fontVerticalTextView"
+            android:padding="8dp">
 
-        <CheckBox
-            android:id="@+id/checkBox2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/checkBox"
-            android:text="@string/ellipsize_words"/>
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/justify_text"/>
 
-        <CheckBox
-            android:id="@+id/checkBox3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="41dp"
-            android:layout_marginStart="41dp"
-            android:layout_toEndOf="@+id/checkBox2"
-            android:layout_toRightOf="@+id/checkBox2"
-            android:text="@string/auto_max_lines"/>
+            <CheckBox
+                android:id="@+id/checkBox3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="41dp"
+                android:layout_marginStart="41dp"
+                android:layout_toEndOf="@+id/checkBox2"
+                android:layout_toRightOf="@+id/checkBox2"
+                android:text="@string/auto_max_lines"/>
+
+            <CheckBox
+                android:id="@+id/checkBox2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/checkBox"
+                android:text="@string/ellipsize_words"/>
+        </RelativeLayout>
+
     </RelativeLayout>
 </FrameLayout>

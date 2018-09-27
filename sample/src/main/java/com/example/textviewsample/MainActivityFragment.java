@@ -17,38 +17,20 @@
 package com.example.textviewsample;
 
 import android.annotation.TargetApi;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.device.yearclass.DeviceInfo;
-import com.facebook.device.yearclass.YearClass;
-
-import java.util.Locale;
-
-import util.android.textviews.ExpandableTextView;
 import util.android.textviews.FontTextView;
-import util.android.textviews.ShimmerTextView;
 import util.android.textviews.TypefaceSpan;
-import util.android.textviews.shimmer.Shimmer;
-import util.android.util.DisplayUtils;
 
 /**
  * A placeholder fragment containing a simple view.
